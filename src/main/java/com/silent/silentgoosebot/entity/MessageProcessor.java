@@ -1,6 +1,7 @@
 package com.silent.silentgoosebot.entity;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
  * Description: describe the file
  */
 @Data
+@Accessors(chain = true)
 public class MessageProcessor {
 
     private String messageProcessorId;

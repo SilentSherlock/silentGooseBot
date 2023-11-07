@@ -1,6 +1,7 @@
 package com.silent.silentgoosebot.entity;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
  * Description: describe the teacher properties
  */
 @Data
+@Accessors(chain = true)
 public class Teacher {
 
     private String teacherTableId;
