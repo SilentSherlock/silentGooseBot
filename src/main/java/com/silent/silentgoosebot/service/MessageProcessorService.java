@@ -1,6 +1,10 @@
 package com.silent.silentgoosebot.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.silent.silentgoosebot.dao.MessageProcessorDao;
+import com.silent.silentgoosebot.entity.MessageProcessor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,4 +19,14 @@ public class MessageProcessorService {
 
     @Resource
     private MessageProcessorDao messageProcessorDao;
+
+    public MessageProcessor selectByChannelId(String channelId) {
+        LambdaQueryWrapper<MessageProcessor> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(MessageProcessor::getChannelId, channelId);
+        return messageProcessorDao.selectOne(wrapper);
+    }
+
+    public MessageProcessor selectOne(QueryWrapper<MessageProcessor> wrapper) {
+        return messageProcessorDao.selectOne(wrapper);
+    }
 }
