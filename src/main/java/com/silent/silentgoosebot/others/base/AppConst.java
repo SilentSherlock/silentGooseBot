@@ -24,4 +24,9 @@ public class AppConst {
         if (localDateTime == null) localDateTime = LocalDateTime.now();
         return localDateTime.format(DateTimeFormatter.ofPattern(date_format));
     }
+
+    public interface Bot {
+        String bot_token = "bot_token";
+        String bot_username = "bot_username";
+    }
 }

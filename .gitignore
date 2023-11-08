@@ -41,3 +41,5 @@ test/*
 *.properties
 /src/test/
 *.jar
+logs/
+*.log
