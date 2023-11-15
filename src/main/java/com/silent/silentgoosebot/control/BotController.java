@@ -2,6 +2,7 @@ package com.silent.silentgoosebot.control;
 
 import com.silent.silentgoosebot.others.SilentGooseBot;
 import com.silent.silentgoosebot.others.base.AppConst;
+import com.silent.silentgoosebot.others.base.BotUtils;
 import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,8 @@ public class BotController {
 
     @RequestMapping(value = "/botStart")
     public void botStart() {
-        DefaultBotOptions options = new DefaultBotOptions();
-        options.setProxyHost("127.0.0.1");
-        options.setProxyPort(10809);
-        options.setProxyType(DefaultBotOptions.ProxyType.HTTP);
 
+        DefaultBotOptions options = BotUtils.getDefaultOption();
         log.info("botToken:" + MyPropertiesUtil.getProperty(AppConst.Bot.bot_token));
         SilentGooseBot bot = new SilentGooseBot(
                 MyPropertiesUtil.getProperty(AppConst.Bot.bot_token),

@@ -29,4 +29,9 @@ public class AppConst {
         String bot_token = "bot_token";
         String bot_username = "bot_username";
     }
+
+    public interface Proxy {
+        String proxy_host = "127.0.0.1";
+        int proxy_port = 10809;
+    }
 }
