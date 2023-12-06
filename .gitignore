@@ -43,3 +43,4 @@ test/*
 *.jar
 logs/
 *.log
+/lib/

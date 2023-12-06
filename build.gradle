@@ -19,6 +19,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url "https://mvn.mchv.eu/repository/mchv/" }
 }
 
 dependencies {
@@ -35,6 +36,13 @@ dependencies {
     implementation 'org.telegram:telegrambots:6.8.0'
     implementation 'org.telegram:telegrambots-abilities:6.8.0'
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.2'
+    // import the BOM
+    implementation platform('it.tdlight:tdlight-java-bom:3.2.2+td.1.8.21')
+
+    // do not specify the versions on the dependencies below!
+    implementation group: 'it.tdlight', name: 'tdlight-java' // Java 8 is supported if you use the following dependency classifier: `jdk8`
+    implementation group: 'it.tdlight', name: 'tdlight-natives', classifier: 'windows_amd64'
+    // Include other native classifiers, for example linux_amd64_gnu_ssl3,  linux_amd64_clang_ssl3, macos_amd64, linux_armhf_gnu_ssl3, ... -->
 }
 
 tasks.named('test') {
