@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.silent.silentgoosebot.dao.MessageProcessorDao;
 import com.silent.silentgoosebot.entity.MessageProcessor;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 
 /**
  * Date: 2023/11/7

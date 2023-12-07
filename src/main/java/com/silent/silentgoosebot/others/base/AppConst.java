@@ -25,9 +25,11 @@ public class AppConst {
         return localDateTime.format(DateTimeFormatter.ofPattern(date_format));
     }
 
-    public interface Bot {
+    public interface Tg {
         String bot_token = "bot_token";
         String bot_username = "bot_username";
+        String app_api_id = "app_api_id";
+        String app_api_hash = "app_api_hash";
     }
 
     public interface Proxy {
