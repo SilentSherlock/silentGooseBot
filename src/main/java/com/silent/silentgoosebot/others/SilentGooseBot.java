@@ -1,16 +1,10 @@
 package com.silent.silentgoosebot.others;
 
-import com.silent.silentgoosebot.others.base.AppConst;
-import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
-import it.tdlight.jni.TdApi;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.List;
 
