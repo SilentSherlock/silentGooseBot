@@ -66,12 +66,22 @@ public class BotController {
             settings.setDownloadedFilesDirectoryPath(sessionPath.resolve("downloads"));
 
             //prepare a client builder
+            TdApi.AddProxy proxy = new TdApi.AddProxy(
+                    AppConst.Proxy.proxy_host,
+                    AppConst.Proxy.proxy_port,
+                    true,
+                    new TdApi.ProxyTypeHttp()
+            );
+
             SimpleTelegramClientBuilder builder = clientFactory.builder(settings);
 
+
             //configure authentication
-            SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user("+1 6124487478");
+            SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user("+16124487478");
 //            settings.setUseTestDatacenter(true);
             try (MoistLifeApp app = new MoistLifeApp(builder, supplier)){
+                SimpleTelegramClient appClient = app.getClient();
+
                 TdApi.User me = app.getClient().getMeAsync().get(1, TimeUnit.MINUTES);
                 // Send a test message
                 TdApi.SendMessage req = new TdApi.SendMessage();

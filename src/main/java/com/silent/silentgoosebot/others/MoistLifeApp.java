@@ -26,6 +26,8 @@ public class MoistLifeApp implements AutoCloseable{
         builder.addUpdateHandler(TdApi.UpdateAuthorizationState.class, this::onUpdateAuthorizationState);
         //add msg handler
         builder.addUpdateHandler(TdApi.UpdateNewMessage.class, this::onUpdateNewMessage);
+        //add user log handler
+        builder.addUpdateHandler(TdApi.UpdateUserStatus.class, this::onUpdateUserStatus);
 
         this.client = builder.build(authenticationSupplier);
     }
@@ -47,6 +49,24 @@ public class MoistLifeApp implements AutoCloseable{
         }
     }
 
+    /**
+     * handle user login or logout
+     * @param update
+     */
+    private void onUpdateUserStatus(TdApi.UpdateUserStatus update) {
+        TdApi.UserStatus userStatus = update.status;
+        long userid = update.userId;
+        if (userStatus instanceof TdApi.UserStatusOffline) {
+            log.info("user off line, real" + userid);
+        } else if (userStatus instanceof TdApi.UserStatusOnline) {
+            log.info("user on line, real" + userid);
+        }
+    }
+
+    /**
+     * handle new Msg
+     * @param update
+     */
     private void onUpdateNewMessage(TdApi.UpdateNewMessage update) {
         //get msg content
         TdApi.MessageContent messageContent = update.message.content;
