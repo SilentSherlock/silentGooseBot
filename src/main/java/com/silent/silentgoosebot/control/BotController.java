@@ -53,6 +53,7 @@ public class BotController {
     @RequestMapping(value = "/appStart")
     public void appStart() throws Exception{
         //initialize native lib
+        log.info("app start");
         Init.init();
 
         try (SimpleTelegramClientFactory clientFactory = new SimpleTelegramClientFactory()){
@@ -77,20 +78,26 @@ public class BotController {
 
 
             //configure authentication
-            SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user("+16124487478");
+            SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user(MyPropertiesUtil.getProperty(AppConst.Tg.user_phone_number));
 //            settings.setUseTestDatacenter(true);
             try (MoistLifeApp app = new MoistLifeApp(builder, supplier)){
                 SimpleTelegramClient appClient = app.getClient();
-
-                TdApi.User me = app.getClient().getMeAsync().get(1, TimeUnit.MINUTES);
-                // Send a test message
+                log.info("build proxy");
+                appClient.send(proxy, result -> System.out.println("result:" + result.toString()));
+                log.info("send msg");
+                TdApi.User me = appClient.getMeAsync().get(1, TimeUnit.MINUTES);
                 TdApi.SendMessage req = new TdApi.SendMessage();
-                req.chatId = me.id;
+//                req.chatId = me.id;
+                req.chatId = 6613495160L;
                 TdApi.InputMessageText txt = new TdApi.InputMessageText();
-                txt.text = new TdApi.FormattedText("TDLight test", new TdApi.TextEntity[0]);
+                txt.text = new TdApi.FormattedText("TDLight test MoistLife", new TdApi.TextEntity[0]);
                 req.inputMessageContent = txt;
-                TdApi.Message result = app.getClient().sendMessage(req, true).get(1, TimeUnit.MINUTES);
-                System.out.println("Sent message:" + result);
+                appClient.sendMessage(req, true);
+                log.info("send success");
+//                TdApi.User me = app.getClient().getMeAsync().get(1, TimeUnit.MINUTES);
+                // Send a test message
+
+//                System.out.println("Sent message:" + result);
             }
         }
     }

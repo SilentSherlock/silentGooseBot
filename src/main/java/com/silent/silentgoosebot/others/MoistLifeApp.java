@@ -6,6 +6,8 @@ import it.tdlight.client.SimpleTelegramClientBuilder;
 import it.tdlight.jni.TdApi;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Scanner;
+
 /**
  * Date: 2023/12/6
  * Author: SilentSherlock
@@ -46,6 +48,33 @@ public class MoistLifeApp implements AutoCloseable{
             log.info("user close");
         } else if (state instanceof TdApi.AuthorizationStateLoggingOut) {
             log.info("user logged out");
+        } else if (state instanceof TdApi.AuthorizationStateWaitCode) {
+            System.out.println("请输入获取到的验证码");
+            Scanner scanner = new Scanner(System.in);
+            String code = scanner.nextLine();
+
+            // 发送验证码到 TDLib
+            client.send(new TdApi.CheckAuthenticationCode(code), result -> {
+                if (result.isError()){
+                    log.info("验证码错误");
+                }
+            });
+        } else if (state instanceof TdApi.AuthorizationStateWaitPassword) {
+            // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
+            System.out.println("请输入您的两步验证密码:");
+            Scanner scanner = new Scanner(System.in);
+            String password = scanner.nextLine();
+
+            // 发送两步验证密码到 TDLib
+            client.send(new TdApi.CheckAuthenticationPassword(password), result -> {
+                if (result.isError()) {
+                    // 如果有错误，打印错误信息
+                    System.out.println("两步验证密码验证失败: " + result.getError().message);
+                } else {
+                    // 如果验证成功，继续后续操作
+                    System.out.println("两步验证密码验证成功!");
+                }
+            });
         }
     }
 

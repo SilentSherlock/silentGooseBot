@@ -30,6 +30,7 @@ public class AppConst {
         String bot_username = "bot_username";
         String app_api_id = "app_api_id";
         String app_api_hash = "app_api_hash";
+        String user_phone_number = "user_phone_number";
     }
 
     public interface Proxy {
