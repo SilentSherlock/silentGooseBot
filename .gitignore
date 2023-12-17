@@ -44,3 +44,4 @@ test/*
 logs/
 *.log
 /lib/
+/tdlib-session-57066/

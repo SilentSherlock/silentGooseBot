@@ -98,6 +98,7 @@ public class MoistLifeApp implements AutoCloseable{
      */
     private void onUpdateNewMessage(TdApi.UpdateNewMessage update) {
         //get msg content
+        System.out.println("收到消息来自：" + update.message.senderId);
         TdApi.MessageContent messageContent = update.message.content;
 
         String text = "";
@@ -128,4 +129,5 @@ public class MoistLifeApp implements AutoCloseable{
     public void close() throws Exception {
         client.close();
     }
+
 }

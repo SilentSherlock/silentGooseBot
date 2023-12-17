@@ -3,7 +3,6 @@ package com.silent.silentgoosebot.service;
 import com.silent.silentgoosebot.dao.ChannelDao;
 import com.silent.silentgoosebot.entity.Channel;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
