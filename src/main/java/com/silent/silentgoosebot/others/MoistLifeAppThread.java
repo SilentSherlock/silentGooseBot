@@ -21,6 +21,7 @@ import java.util.Objects;
 public class MoistLifeAppThread implements Runnable{
     private volatile boolean runFlag;
 
+
     public MoistLifeAppThread() {
         this.runFlag = true;
     }
