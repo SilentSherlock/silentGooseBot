@@ -20,7 +20,7 @@ import java.util.Objects;
 @Slf4j
 public class MoistLifeAppThread implements Runnable{
     private volatile boolean runFlag;
-
+    private MoistLifeApp app;
 
     public MoistLifeAppThread() {
         this.runFlag = true;
@@ -67,7 +67,8 @@ public class MoistLifeAppThread implements Runnable{
             //configure authentication
             SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user(MyPropertiesUtil.getProperty(AppConst.Tg.user_phone_number));
 //            settings.setUseTestDatacenter(true);
-            try (MoistLifeApp app = new MoistLifeApp(builder, supplier)){
+            try {
+                app = new MoistLifeApp(builder, supplier);
                 SimpleTelegramClient appClient = app.getClient();
                 log.info("build proxy");
                 appClient.send(proxy, result -> System.out.println("result:" + result.toString()));
