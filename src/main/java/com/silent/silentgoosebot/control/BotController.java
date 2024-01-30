@@ -3,7 +3,6 @@ package com.silent.silentgoosebot.control;
 import com.silent.silentgoosebot.others.MoistLifeAppThread;
 import com.silent.silentgoosebot.others.SilentGooseBot;
 import com.silent.silentgoosebot.others.base.AppConst;
-import com.silent.silentgoosebot.others.base.AppSqliteDataSource;
 import com.silent.silentgoosebot.others.base.BotUtils;
 import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
 import jakarta.annotation.Resource;
@@ -24,8 +23,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @Slf4j
 public class BotController {
 
-    @Resource
-    private AppSqliteDataSource appSqliteDataSource;
+
 
     @RequestMapping(value = "/botStart")
     public void botStart() {
