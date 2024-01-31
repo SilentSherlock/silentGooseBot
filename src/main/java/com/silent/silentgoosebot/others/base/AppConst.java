@@ -39,6 +39,14 @@ public class AppConst {
         interface User {
             String link = "@";
         }
+
+        interface Command {
+            String WELCOME = "welcome";
+            String NAVIGATION = "导航";
+            String CHOOSE_HOOKER = "选妃";
+            String START_GROUP_NAVIGATE_SCHEDULE = "startGroupNavigateSchedule";
+            String GROUPS_UNDER_WATCH = "groupsUnderWatch";
+        }
     }
 
     public interface Proxy {

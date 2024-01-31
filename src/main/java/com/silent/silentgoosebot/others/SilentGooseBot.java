@@ -63,39 +63,69 @@ public class SilentGooseBot extends AbilityBot {
 
     // region Ability
 
-    public Ability welcome() {
+    /**
+     * get commands which can be used in this group
+     * @return
+     */
+    public Ability navigate() {
         return Ability.builder()
-                .name("welcome")
-                .info("welcome our new member")
-                .locality(Locality.GROUP) //used in group
-                .privacy(Privacy.PUBLIC) //access by every member
-                .action(this::welcomeNewMember)
+                .name(AppConst.Tg.Command.NAVIGATION)
+                .info("Get all command in this group")
+                .locality(Locality.GROUP)
+                .privacy(Privacy.PUBLIC)
+                .action(this::getNavigation)
                 .build();
     }
 
-
-    private void welcomeNewMember(MessageContext messageContext) {
-        log.info("welcome new member");
-        Update update = messageContext.update();
-        if (update.hasMessage() && update.getMessage().getNewChatMembers() != null) {
-            Message receiveMessage = update.getMessage();
-            List<User> userList = receiveMessage.getNewChatMembers();
-
-            long chatId = receiveMessage.getChatId();
-            userList.forEach(user -> {
-                log.info("we got a new member");
-                SendMessage sendMessage = new SendMessage();
-                sendMessage.setChatId(chatId);
-                sendMessage.setText("Welcome " + user.getUserName() + " as our new member!");
-                try {
-                    execute(sendMessage);
-                } catch (TelegramApiException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-        }
+    private void getNavigation(MessageContext messageContext) {
+        // TODO: 2024/1/31 查询数据库获取当前群组可以使用的命令列表返回
+        // 命令列表
     }
+
+    /**
+     * start nav schedule in a group or all group
+     * input group id or 'all' to specify which be start
+     * @return
+     */
+    public Ability startGroupNavigateSchedule() {
+        return Ability.builder()
+                .name(AppConst.Tg.Command.GROUPS_UNDER_WATCH)
+                .info("start group navigate timer task")
+                .input(1) // need one arg, 'all' or group id
+                .locality(Locality.USER)
+                .privacy(Privacy.ADMIN)
+                .action(this::startGroupNavigateTimer)
+                .build();
+    }
+
+    private void startGroupNavigateTimer(MessageContext messageContext) {
+
+        log.info("startGroupNavigateTimer start");
+        String[] args = messageContext.arguments();
+        String groupId = "";
+        if (null == args) groupId = "all";
+        // TODO: 2024/1/31 根据groupId 查询对应的定时器配置，考虑把定时器单独写成类
+    }
+
+    /**
+     * get all groups the bot managed
+     * @return
+     */
+    public Ability groupsUnderWatch() {
+        return Ability.builder()
+                .name(AppConst.Tg.Command.GROUPS_UNDER_WATCH)
+                .info("Get all command in this group")
+                .locality(Locality.USER)
+                .privacy(Privacy.ADMIN)
+                .action(this::getNavigation)
+                .build();
+    }
+
+    private void getAllGroups(MessageContext messageContext) {
+        log.info("Get all groups");
+        // TODO: 2024/1/31 获取当前机器人管理的所有群组
+    }
+
 
     // endregion
 
@@ -140,6 +170,7 @@ public class SilentGooseBot extends AbilityBot {
                                 editMessageText.setMessageId(sentMessageId);
                                 editMessageText.setChatId(chatId);
                                 count[0]--;
+                                if (0 == count[0]) cancel();
                                 String countText = "该条消息将在" + count[0] + "秒后删除";
                                 editMessageText.setText(welcomeText.concat(countText));
                                 execute(editMessageText);
@@ -160,7 +191,7 @@ public class SilentGooseBot extends AbilityBot {
 
                         log.info("set timer execute schedules");
                         Timer timer = new Timer();
-                        timer.schedule(editTask, 1000);
+                        timer.schedule(editTask, 1000, 1000);
                         timer.schedule(deleteTask, 5000);
 
                     } catch (TelegramApiException e) {
@@ -172,6 +203,7 @@ public class SilentGooseBot extends AbilityBot {
             }
         }, Update::hasMessage); // 设置Reply的触发条件，这里是收到消息
     }
+
 
     // endregion
 }
