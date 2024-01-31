@@ -42,8 +42,8 @@ public class AppConst {
 
         interface Command {
             String WELCOME = "welcome";
-            String NAVIGATION = "导航";
-            String CHOOSE_HOOKER = "选妃";
+            String NAVIGATION = "navigation";
+            String CHOOSE_HOOKER = "choose_hooker";
             String START_GROUP_NAVIGATE_SCHEDULE = "startGroupNavigateSchedule";
             String GROUPS_UNDER_WATCH = "groupsUnderWatch";
         }

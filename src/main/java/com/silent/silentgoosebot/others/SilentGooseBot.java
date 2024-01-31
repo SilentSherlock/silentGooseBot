@@ -15,8 +15,13 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Predicate;
+
+import static org.telegram.abilitybots.api.objects.Flag.MESSAGE;
+import static org.telegram.abilitybots.api.objects.Flag.REPLY;
 
 /**
  * 消息接受bot,接受监听到的消息并进行转发
@@ -33,7 +38,7 @@ public class SilentGooseBot extends AbilityBot {
         super(botToken, botUsername, options);
     }
 
-//    @Override
+    //    @Override
 //    public void onUpdatesReceived(List<Update> updates) {
 //        log.info("bot receive message, begin distribute");
 //        updates.stream()
@@ -58,7 +63,7 @@ public class SilentGooseBot extends AbilityBot {
 
     @Override
     public long creatorId() {
-        return 0;
+        return 6558200354L;
     }
 
     // region Ability
@@ -74,11 +79,13 @@ public class SilentGooseBot extends AbilityBot {
                 .locality(Locality.GROUP)
                 .privacy(Privacy.PUBLIC)
                 .action(this::getNavigation)
+                .setStatsEnabled(true)
                 .build();
     }
 
     private void getNavigation(MessageContext messageContext) {
         // TODO: 2024/1/31 查询数据库获取当前群组可以使用的命令列表返回
+        log.info("navigate");
         // 命令列表
     }
 
@@ -89,10 +96,10 @@ public class SilentGooseBot extends AbilityBot {
      */
     public Ability startGroupNavigateSchedule() {
         return Ability.builder()
-                .name(AppConst.Tg.Command.GROUPS_UNDER_WATCH)
+                .name(AppConst.Tg.Command.START_GROUP_NAVIGATE_SCHEDULE)
                 .info("start group navigate timer task")
                 .input(1) // need one arg, 'all' or group id
-                .locality(Locality.USER)
+                .locality(Locality.ALL)
                 .privacy(Privacy.ADMIN)
                 .action(this::startGroupNavigateTimer)
                 .build();
@@ -113,11 +120,21 @@ public class SilentGooseBot extends AbilityBot {
      */
     public Ability groupsUnderWatch() {
         return Ability.builder()
-                .name(AppConst.Tg.Command.GROUPS_UNDER_WATCH)
+                .name("getallgroups")
                 .info("Get all command in this group")
-                .locality(Locality.USER)
-                .privacy(Privacy.ADMIN)
-                .action(this::getNavigation)
+                .locality(Locality.ALL)
+                .privacy(Privacy.PUBLIC)
+                .action(messageContext -> {
+                    log.info("Get ALL groups");
+                    SendMessage message = new SendMessage();
+                    message.setChatId(messageContext.update().getMessage().getChatId());
+                    message.setText("Get all groups under watch");
+                    try {
+                        execute(message);
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .build();
     }
 
@@ -126,6 +143,48 @@ public class SilentGooseBot extends AbilityBot {
         // TODO: 2024/1/31 获取当前机器人管理的所有群组
     }
 
+    public Ability playWithMe() {
+        String playMessage = "Play with me!";
+
+        return Ability.builder()
+                .name("play")
+                .info("Do you want to play with me?")
+                .privacy(Privacy.PUBLIC)
+                .locality(Locality.ALL)
+                .input(0)
+                .action(ctx -> {log.info("play in");})
+                .build();
+    }
+
+    public Ability test() {
+        return Ability.builder()
+                .name("testFuck")
+                .info("testFuck")
+                .locality(Locality.ALL)
+                .privacy(Privacy.PUBLIC)
+                .action(messageContext -> {
+                    log.info("testfuck");
+                    SendMessage message = new SendMessage();
+                    message.setChatId(messageContext.chatId());
+                    message.setText("fuck");
+                    try {
+                        execute(message);
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .build();
+    }
+    public Ability welcome() {
+        return Ability.builder()
+                .name("welcome")
+                .info("Get all command in this group")
+                .locality(Locality.ALL)
+                .privacy(Privacy.PUBLIC)
+                .action((messageContext) -> {log.info("we into welcome");})
+                .reply(sendWelcomeMessage())
+                .build();
+    }
 
     // endregion
 
@@ -135,10 +194,11 @@ public class SilentGooseBot extends AbilityBot {
      * this message will be deleted in 5s
      * @return
      */
-    public Reply sendWelcomeMessage() {
+    private Reply sendWelcomeMessage() {
         // 使用Reply.of()方法创建一个Reply对象
 
         return Reply.of((baseAbilityBot, update) -> {
+            log.info("sendWelcomeMessage receive new message");
             Message message = update.getMessage();
             // 检查消息是否包含新成员
             if (message.getNewChatMembers() != null) {
@@ -151,11 +211,12 @@ public class SilentGooseBot extends AbilityBot {
                     welcome.setChatId(chatId);
                     final int[] count = {5};
                     String welcomeText = AppConst.Tg.Group.welcome
-                            + message.getChat().getTitle()
+                            + message.getChat().getTitle().concat(" ")
                             + AppConst.Tg.User.link
                             + user.getUserName().concat("\n");
                     String countText = "该条消息将在" + count[0] + "秒后删除";
                     welcome.setText(welcomeText.concat(countText));
+
                     try {
                         log.info("send welcome text");
                         Message sentMessage = execute(welcome);
@@ -170,7 +231,7 @@ public class SilentGooseBot extends AbilityBot {
                                 editMessageText.setMessageId(sentMessageId);
                                 editMessageText.setChatId(chatId);
                                 count[0]--;
-                                if (0 == count[0]) cancel();
+                                if (1 == count[0]) cancel();
                                 String countText = "该条消息将在" + count[0] + "秒后删除";
                                 editMessageText.setText(welcomeText.concat(countText));
                                 execute(editMessageText);
@@ -201,8 +262,10 @@ public class SilentGooseBot extends AbilityBot {
 
                 });
             }
-        }, Update::hasMessage); // 设置Reply的触发条件，这里是收到消息
+        }, update -> update.hasMessage() && update.getMessage().getNewChatMembers().size() > 0); // 设置Reply的触发条件，这里是有新成员加入
     }
+
+
 
 
     // endregion
