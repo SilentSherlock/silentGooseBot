@@ -31,6 +31,14 @@ public class AppConst {
         String app_api_id = "app_api_id";
         String app_api_hash = "app_api_hash";
         String user_phone_number = "user_phone_number";
+
+        interface Group {
+            String welcome = "欢迎新成员加入";
+        }
+
+        interface User {
+            String link = "@";
+        }
     }
 
     public interface Proxy {
