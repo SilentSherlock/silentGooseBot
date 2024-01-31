@@ -156,35 +156,16 @@ public class SilentGooseBot extends AbilityBot {
                 .build();
     }
 
-    public Ability test() {
-        return Ability.builder()
-                .name("testFuck")
-                .info("testFuck")
-                .locality(Locality.ALL)
-                .privacy(Privacy.PUBLIC)
-                .action(messageContext -> {
-                    log.info("testfuck");
-                    SendMessage message = new SendMessage();
-                    message.setChatId(messageContext.chatId());
-                    message.setText("fuck");
-                    try {
-                        execute(message);
-                    } catch (TelegramApiException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .build();
-    }
-    public Ability welcome() {
-        return Ability.builder()
-                .name("welcome")
-                .info("Get all command in this group")
-                .locality(Locality.ALL)
-                .privacy(Privacy.PUBLIC)
-                .action((messageContext) -> {log.info("we into welcome");})
-                .reply(sendWelcomeMessage())
-                .build();
-    }
+//    public Ability welcome() {
+//        return Ability.builder()
+//                .name("welcome")
+//                .info("Get all command in this group")
+//                .locality(Locality.ALL)
+//                .privacy(Privacy.PUBLIC)
+//                .action((messageContext) -> {log.info("we into welcome");})
+//                .reply(sendWelcomeMessage())
+//                .build();
+//    }
 
     // endregion
 
@@ -194,7 +175,7 @@ public class SilentGooseBot extends AbilityBot {
      * this message will be deleted in 5s
      * @return
      */
-    private Reply sendWelcomeMessage() {
+    public Reply sendWelcomeMessage() {
         // 使用Reply.of()方法创建一个Reply对象
 
         return Reply.of((baseAbilityBot, update) -> {
