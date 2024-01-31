@@ -132,7 +132,7 @@ public class SilentGooseBot extends AbilityBot {
     // region Reply
     /**
      * called when new member join group, send a welcome message
-     * this message will be delete in 5s
+     * this message will be deleted in 5s
      * @return
      */
     public Reply sendWelcomeMessage() {
