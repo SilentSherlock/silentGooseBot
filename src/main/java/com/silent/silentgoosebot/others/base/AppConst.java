@@ -41,10 +41,11 @@ public class AppConst {
         }
 
         interface Command {
+            // bot commands must be lowercase
             String WELCOME = "welcome";
             String NAVIGATION = "navigation";
             String CHOOSE_HOOKER = "choose_hooker";
-            String START_GROUP_NAVIGATE_SCHEDULE = "startGroupNavigateSchedule";
+            String START_GROUP_NAVIGATE_SCHEDULE = "startgroupnavigateschedule";
             String GROUPS_UNDER_WATCH = "groupsUnderWatch";
         }
     }

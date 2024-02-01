@@ -10,18 +10,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Predicate;
-
-import static org.telegram.abilitybots.api.objects.Flag.MESSAGE;
-import static org.telegram.abilitybots.api.objects.Flag.REPLY;
 
 /**
  * 消息接受bot,接受监听到的消息并进行转发
@@ -99,7 +93,7 @@ public class SilentGooseBot extends AbilityBot {
                 .name(AppConst.Tg.Command.START_GROUP_NAVIGATE_SCHEDULE)
                 .info("start group navigate timer task")
                 .input(1) // need one arg, 'all' or group id
-                .locality(Locality.ALL)
+                .locality(Locality.USER)
                 .privacy(Privacy.ADMIN)
                 .action(this::startGroupNavigateTimer)
                 .build();
