@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -13,6 +14,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -161,6 +164,36 @@ public class SilentGooseBot extends AbilityBot {
 //                .build();
 //    }
 
+    // This method defines an ability that responds to /link command
+    public Ability linkAbility() {
+        return Ability
+                .builder()
+                .name("link")
+                .info("Sends an inline link with html syntax")
+                .locality(Locality.ALL)
+                .privacy(Privacy.PUBLIC)
+                .action(this::sendLink)
+                .build();
+    }
+
+    // This method sends an inline link with html syntax to the chat
+    private void sendLink(MessageContext context) {
+        // Create a SendMessage object
+        SendMessage message = new SendMessage();
+
+        // Set the chat id
+        message.setChatId(context.chatId());
+
+        // Set the text with html tags
+        message.setText("这是一个使用html语法的<a href=\"https://github.com/rubenlagus/TelegramBots\">inline link</a>。");
+
+        // Enable html parsing mode
+        message.setParseMode("html");
+
+        // Send the message using silent method
+        silent.execute(message);
+    }
+
     // endregion
 
     // region Reply
@@ -185,12 +218,24 @@ public class SilentGooseBot extends AbilityBot {
                     SendMessage welcome = new SendMessage();
                     welcome.setChatId(chatId);
                     final int[] count = {5};
-                    String welcomeText = AppConst.Tg.Group.welcome
-                            + message.getChat().getTitle().concat(" ")
-                            + AppConst.Tg.User.link
-                            + user.getUserName().concat("\n");
-                    String countText = "该条消息将在" + count[0] + "秒后删除";
+                    // formant welcome msg with html
+                    log.info("formant welcome msg with html");
+                    MessageFormat messageFormat = new MessageFormat("欢迎<a href=\"{0}\">{1}</a>加入{2}!");
+
+                    user.getFirstName();
+                    String[] args = {
+                            "tg://user?id=".concat(String.valueOf(user.getId())),
+                            user.getFirstName()
+                                    .concat(" ").
+                                    concat(user.getLastName() == null ? "" : user.getLastName()),
+                            message.getChat().getTitle()
+                    };
+                    log.info("args:" + Arrays.toString(args));
+                    String welcomeText = messageFormat.format(args)/*.replace("<", "&lt;").replace(">", "&gt;")*/;
+                    String countText = "消息将在" + count[0] + "秒后自毁";
                     welcome.setText(welcomeText.concat(countText));
+                    welcome.setParseMode(ParseMode.HTML);
+                    log.info(welcome.getText());
 
                     try {
                         log.info("send welcome text");
@@ -207,8 +252,9 @@ public class SilentGooseBot extends AbilityBot {
                                 editMessageText.setChatId(chatId);
                                 count[0]--;
                                 if (1 == count[0]) cancel();
-                                String countText = "该条消息将在" + count[0] + "秒后删除";
+                                String countText = "消息将在" + count[0] + "秒后自毁";
                                 editMessageText.setText(welcomeText.concat(countText));
+                                editMessageText.setParseMode(ParseMode.HTML);
                                 execute(editMessageText);
                             }
                         };

@@ -31,6 +31,7 @@ public class AppConst {
         String app_api_id = "app_api_id";
         String app_api_hash = "app_api_hash";
         String user_phone_number = "user_phone_number";
+        String prefix = "https://t.me/";
 
         interface Group {
             String welcome = "欢迎新成员加入";
@@ -38,6 +39,7 @@ public class AppConst {
 
         interface User {
             String link = "@";
+
         }
 
         interface Command {
