@@ -11,17 +11,18 @@ import java.util.TimerTask;
 /**
  * Date: 2024/2/1
  * Author: SilentSherlock
- * Description: auto send navigation to the specify group
+ * Description: auto send Message to the specify group, scheduled by given delay and period,
+ * the chatId will decide which Message will be
  */
 @Slf4j
-public class SendNavigationTimer extends TimerTask {
+public class AutoMessageSendTimer extends TimerTask {
 
     private SilentGooseBot silentGooseBot;
     private long chatId;
     private long delay;
     private long period;
 
-    private SendNavigationTimer(SilentGooseBot silentGooseBot, long chatId, long delay, long period) {
+    private AutoMessageSendTimer(SilentGooseBot silentGooseBot, long chatId, long delay, long period) {
         this.silentGooseBot = silentGooseBot;
         this.chatId = chatId;
         this.delay = delay;
@@ -34,7 +35,7 @@ public class SendNavigationTimer extends TimerTask {
                              long period
     ) {
         log.info("build SendNavigationTimer");
-        SendNavigationTimer timer = new SendNavigationTimer(silentGooseBot, chatId, delay, period);
+        AutoMessageSendTimer timer = new AutoMessageSendTimer(silentGooseBot, chatId, delay, period);
 
     }
 
