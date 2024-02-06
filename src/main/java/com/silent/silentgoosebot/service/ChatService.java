@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * Description: describe the file
  */
 @Service
-public class ChannelService {
+public class ChatService {
 
     @Resource
     private ChannelDao channelDao;
