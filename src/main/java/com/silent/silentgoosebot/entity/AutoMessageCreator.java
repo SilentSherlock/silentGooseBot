@@ -20,4 +20,5 @@ public class AutoMessageCreator {
     private String messageType;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+
 }
