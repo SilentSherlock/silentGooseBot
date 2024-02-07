@@ -17,6 +17,7 @@ public class AutoMessageCreator {
 
     private Integer autoMessageCreatorId;
     private String messageClassPath;
+    private String methodName;
     private String messageType;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
