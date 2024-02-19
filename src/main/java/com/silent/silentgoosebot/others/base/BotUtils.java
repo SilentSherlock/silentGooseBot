@@ -20,6 +20,6 @@ public class BotUtils {
     }
 
     public static boolean isChatId(String chatId) {
-        return chatId.matches("-?\\d{1,10}") || chatId.matches("@[a-zA-Z0-9]{5,32}");
+        return chatId.matches("-?\\d{10,13}") || chatId.matches("@[a-zA-Z0-9]{5,32}");
     }
 }

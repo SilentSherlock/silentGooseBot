@@ -166,14 +166,15 @@ public class SilentGooseBot extends AbilityBot {
                         sendMessage.setText("Doesn't get Chat with " + chatId);
                     } else {
                         sendMessage.setText(
-                                "ChatId:" + chatInfo.getId() + "\n"
-                                + "Title" + chatInfo.getTitle() + "\n"
-                                + "First" + chatInfo.getFirstName() + "\n"
-                                + "Last" + chatInfo.getLastName() + "\n"
-                                + "UserName" + chatInfo.getUserName()
+                                "ChatId: " + chatInfo.getId() + "\n"
+                                + "Title: " + chatInfo.getTitle() + "\n"
+                                + "First: " + chatInfo.getFirstName() + "\n"
+                                + "Last: " + chatInfo.getLastName() + "\n"
+                                + "UserName: " + chatInfo.getUserName()
                         );
                     }
                 } catch (TelegramApiException e) {
+                    sendMessage.setText("Doesn't get Chat with " + chatId);
                     e.printStackTrace();
                 }
             }
