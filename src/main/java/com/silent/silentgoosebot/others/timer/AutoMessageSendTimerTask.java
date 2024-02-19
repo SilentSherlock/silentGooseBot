@@ -40,6 +40,12 @@ public class AutoMessageSendTimerTask extends TimerTask {
         this.groupMessageSchedule = groupMessageSchedule;
     }
 
+    /**
+     *
+     * @param silentGooseBot
+     * @param groupMessageSchedule
+     * @param dataMap send data used in building message(SendMessage, SendPhoto, etc)
+     */
     public static void start(SilentGooseBot silentGooseBot,
                              GroupMessageSchedule groupMessageSchedule,
                              Map<String, Object> dataMap

@@ -1,24 +1,32 @@
 package com.silent.silentgoosebot.others;
 
+import com.google.common.collect.Lists;
+import com.silent.silentgoosebot.entity.GroupMessageSchedule;
 import com.silent.silentgoosebot.others.base.AppConst;
+import com.silent.silentgoosebot.others.base.BotUtils;
+import com.silent.silentgoosebot.others.base.MessageType;
+import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
+import com.silent.silentgoosebot.others.timer.AutoMessageSendTimerTask;
+import com.silent.silentgoosebot.service.TimerService;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * 消息接受bot,接受监听到的消息并进行转发
@@ -26,6 +34,8 @@ import java.util.TimerTask;
 @Slf4j
 public class SilentGooseBot extends AbilityBot {
 
+    @Resource
+    private TimerService timerService;
 
     public SilentGooseBot(String botToken, String botUsername) {
         super(botToken, botUsername);
@@ -35,24 +45,6 @@ public class SilentGooseBot extends AbilityBot {
         super(botToken, botUsername, options);
     }
 
-    //    @Override
-//    public void onUpdatesReceived(List<Update> updates) {
-//        log.info("bot receive message, begin distribute");
-//        updates.stream()
-//                .filter(Update::hasMessage)
-//                .map(Update::getMessage)
-//                .forEach(message -> {
-//                    Chat curChat = message.getChat();
-//                    log.info("curChat " + curChat.toString());
-//                    log.info("curMsg " + message);
-//                    if (curChat.isChannelChat()) {
-//                        log.info("channel chat");
-//                    } else if (curChat.isUserChat()) {
-//                        log.info("user chat");
-//                    }
-//                });
-//    }
-
     @Override
     public void onClosing() {
 
@@ -60,10 +52,142 @@ public class SilentGooseBot extends AbilityBot {
 
     @Override
     public long creatorId() {
-        return 6558200354L;
+        String id = MyPropertiesUtil.getProperty(AppConst.Tg.creator_id);
+        if (StringUtils.isAllBlank(id)) {
+            log.error("creator_id:{}", id);
+            return 0;
+        }
+        log.info("creator_id:{}", id);
+        return Long.parseLong(id);
     }
 
     // region Ability
+
+    /**
+     * start drink water timer in given chat group
+     * input--chatId
+     * @return
+     */
+    public Ability startDrinkWaterTimer() {
+        return Ability.builder()
+                .name(AppConst.Tg.Command.DRINK_WATER)
+                .info("start drink water")
+                .locality(Locality.USER)
+                .privacy(Privacy.ADMIN)
+                .input(1)
+                .action(this::startDrinkWater)
+                .setStatsEnabled(true)
+                .build();
+    }
+
+    private void startDrinkWater(MessageContext messageContext) {
+        log.info("start drink water timer");
+        String[] args = messageContext.arguments();
+        long chatId = 0L;
+        if (null == args || args.length == 0) {
+            log.info("drink water doesn't receive chatId, will start all drink water");
+        } else {
+            chatId = Long.parseLong(args[0]);
+        }
+        List<GroupMessageSchedule> schedules = new ArrayList<>();
+        if (chatId != 0L) {
+            schedules.add(timerService.selectScheduleByChatIdAndMsgType(chatId, MessageType.DRINK_WATER));
+        } else {
+            schedules.addAll(timerService.selectSchedulesByMsgType(MessageType.DRINK_WATER));
+        }
+
+        log.info("start timer");
+        List<SendMessage> messages = new ArrayList<>();
+        if (schedules.isEmpty()) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(messageContext.chatId());
+            sendMessage.setText("Schedules is empty");
+            messages.add(sendMessage);
+        } else {
+            schedules.forEach(groupMessageSchedule -> {
+                AutoMessageSendTimerTask.start(
+                        this,
+                        groupMessageSchedule,
+                        new HashMap<>()
+                );
+                SendMessage sendMessage = new SendMessage();
+                sendMessage.setChatId(messageContext.chatId());
+                sendMessage.setText("Drink Water start in " + groupMessageSchedule.getChatId());
+                messages.add(sendMessage);
+            });
+        }
+        messages.forEach(sendMessage -> {
+            try {
+                execute(sendMessage);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * get chat info by chat ID (Long or String start with @, 123456 or @IamAChat )
+     * @return
+     */
+    public Ability chatInfo() {
+        return Ability.builder()
+                .name(AppConst.Tg.Command.CHAT_INFO)
+                .info("Give Info of given chat")
+                .input(1)
+                .privacy(Privacy.PUBLIC)
+                .locality(Locality.USER)
+                .action(this::getChatInfo)
+                .setStatsEnabled(true)
+                .build();
+    }
+
+    private void getChatInfo(MessageContext messageContext) {
+        log.info("GetChatInfo start");
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(messageContext.chatId());
+        String[] args = messageContext.arguments();
+        if (null == args || args.length == 0) {
+            log.info("Chat Info receive empty args, return");
+            sendMessage.setText("Command eg: /chatinfo 123456 or @IamAChat");
+        } else {
+            String chatId = args[0];
+            log.info("Chat Info receive args {}", chatId);
+            if (!BotUtils.isChatId(chatId)) {
+                sendMessage.setText("Chat Id illegal:" + chatId);
+            } else {
+                log.info("Get Chat Info");
+                GetChat getChat = new GetChat();
+                if (chatId.startsWith("@")) getChat.setChatId(chatId);
+                else getChat.setChatId(Long.parseLong(chatId));
+                try {
+                    Chat chatInfo = execute(getChat);
+                    if (null == chatInfo) {
+                        sendMessage.setText("Doesn't get Chat with " + chatId);
+                    } else {
+                        sendMessage.setText(
+                                "ChatId:" + chatInfo.getId() + "\n"
+                                + "Title" + chatInfo.getTitle() + "\n"
+                                + "First" + chatInfo.getFirstName() + "\n"
+                                + "Last" + chatInfo.getLastName() + "\n"
+                                + "UserName" + chatInfo.getUserName()
+                        );
+                    }
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        log.info("Send Result");
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            log.error("Send Chat Info Result Error");
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * get commands which can be used in this group

@@ -32,6 +32,7 @@ public class AppConst {
         String app_api_hash = "app_api_hash";
         String user_phone_number = "user_phone_number";
         String prefix = "https://t.me/";
+        String creator_id = "creator_id";
 
         interface Group {
             String welcome = "欢迎新成员加入";
@@ -49,6 +50,8 @@ public class AppConst {
             String CHOOSE_HOOKER = "choose_hooker";
             String START_GROUP_NAVIGATE_SCHEDULE = "startgroupnavigateschedule";
             String GROUPS_UNDER_WATCH = "groupsUnderWatch";
+            String DRINK_WATER = "drinkwater";
+            String CHAT_INFO = "chatinfo";
         }
     }
 

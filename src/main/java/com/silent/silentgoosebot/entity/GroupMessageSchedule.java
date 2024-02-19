@@ -1,5 +1,6 @@
 package com.silent.silentgoosebot.entity;
 
+import com.silent.silentgoosebot.others.base.MessageType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -16,7 +17,7 @@ public class GroupMessageSchedule {
 
     private Integer groupMessageScheduleId;
     private long chatId;
-    private String messageType;
+    private MessageType messageType;
     private Integer autoMessageCreatorId;
     private long delay;
     private long period;

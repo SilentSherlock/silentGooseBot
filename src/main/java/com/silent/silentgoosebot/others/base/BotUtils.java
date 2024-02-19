@@ -18,4 +18,8 @@ public class BotUtils {
         options.setProxyType(DefaultBotOptions.ProxyType.HTTP);
         return options;
     }
+
+    public static boolean isChatId(String chatId) {
+        return chatId.matches("-?\\d{1,10}") || chatId.matches("@[a-zA-Z0-9]{5,32}");
+    }
 }

@@ -8,5 +8,6 @@ package com.silent.silentgoosebot.others.base;
 public enum MessageType {
 
     NAVIGATION,
-    WEATHER
+    WEATHER,
+    DRINK_WATER
 }
