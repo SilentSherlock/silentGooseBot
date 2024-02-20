@@ -19,7 +19,14 @@ public class BotUtils {
         return options;
     }
 
+    /**
+     * match chatId pattern
+     * @param chatId Match 10 to 13 digits, a string of pure numbers
+     *               starting with -, optional, and match 5 to 32 digits,
+     *               a string of alphanumeric characters starting with @, optional
+     * @return
+     */
     public static boolean isChatId(String chatId) {
-        return chatId.matches("-?\\d{10,13}") || chatId.matches("@[a-zA-Z0-9]{5,32}");
+        return chatId.matches("-?\\d{10,13}") || chatId.matches("@?(\\w{5,32})");
     }
 }

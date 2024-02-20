@@ -63,6 +63,19 @@ public class SilentGooseBot extends AbilityBot {
 
     // region Ability
 
+    public Ability getAllDrinkWaterGroup() {
+        return null;
+    }
+
+    private void getAllDrinkWaterGroup(MessageContext messageContext) {
+        log.info("Get all drink water groups");
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(messageContext.chatId());
+
+        List<GroupMessageSchedule> schedules = timerService.selectSchedulesByMsgType(MessageType.DRINK_WATER);
+        //schedules.forEach();
+    }
+
     /**
      * start drink water timer in given chat group
      * input--chatId
