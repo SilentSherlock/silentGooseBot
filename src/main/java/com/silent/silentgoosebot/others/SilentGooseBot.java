@@ -87,7 +87,7 @@ public class SilentGooseBot extends AbilityBot {
         sendMessage.setReplyToMessageId(message.getMessageId());
 
         MessageFormat messageFormat = new MessageFormat("""
-                Hello, <a href="{0}">{1}</a>, You ard in a group, the group info blows
+                Hello, <a href="{0}">{1}</a>, You are in a group, the group info blows
                 ChatId:{2}
                 ChatLink:{3}
                 ChatName:{4}
@@ -101,7 +101,7 @@ public class SilentGooseBot extends AbilityBot {
                 chat.getTitle()
         };
         String sendText = messageFormat.format(args);
-        log.info("SendTest:{}", sendText);
+        log.info("SendText:{}", sendText);
         sendMessage.setText(sendText);
         sendMessage.setParseMode(ParseMode.HTML);
         try {
