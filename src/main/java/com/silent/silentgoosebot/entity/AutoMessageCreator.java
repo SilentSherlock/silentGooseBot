@@ -1,5 +1,6 @@
 package com.silent.silentgoosebot.entity;
 
+import com.silent.silentgoosebot.others.base.MessageType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -18,7 +19,7 @@ public class AutoMessageCreator {
     private Integer autoMessageCreatorId;
     private String messageClassPath;
     private String methodName;
-    private String messageType;
+    private MessageType messageType;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
