@@ -12,6 +12,9 @@ import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.*;
@@ -33,11 +36,10 @@ import java.util.*;
  * 消息接受bot,接受监听到的消息并进行转发
  */
 @Slf4j
-@Component
-public class SilentGooseBot extends AbilityBot {
+public class SilentGooseBot extends AbilityBot implements ApplicationContextAware {
 
-    @Resource
     private TimerService timerService;
+    private ApplicationContext applicationContext;
 
     public SilentGooseBot(String botToken, String botUsername) {
         super(botToken, botUsername);
@@ -475,7 +477,11 @@ public class SilentGooseBot extends AbilityBot {
         }, update -> update.hasMessage() && update.getMessage().getNewChatMembers().size() > 0); // 设置Reply的触发条件，这里是有新成员加入
     }
 
-
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+        timerService = applicationContext.getBean(TimerService.class);
+    }
 
 
     // endregion
