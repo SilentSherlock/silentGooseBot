@@ -12,6 +12,7 @@ import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -32,6 +33,7 @@ import java.util.*;
  * 消息接受bot,接受监听到的消息并进行转发
  */
 @Slf4j
+@Component
 public class SilentGooseBot extends AbilityBot {
 
     @Resource
