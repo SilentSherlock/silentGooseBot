@@ -63,9 +63,10 @@ public class SilentGooseBot extends AbilityBot {
 
     // region Ability
 
-    public Ability getAllDrinkWaterGroup() {
+    /*public Ability getAllDrinkWaterGroup() {
         return null;
-    }
+    }*/
+
 
     private void getAllDrinkWaterGroup(MessageContext messageContext) {
         log.info("Get all drink water groups");
