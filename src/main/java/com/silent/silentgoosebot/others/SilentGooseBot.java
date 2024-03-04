@@ -66,7 +66,7 @@ public class SilentGooseBot extends AbilityBot {
     public Ability chatInfoInGroup() {
         return Ability.builder()
                 .name(AppConst.Tg.Command.WHERE_AM_I)
-                .info("start drink water")
+                .info("Give the group info you in")
                 .locality(Locality.GROUP)
                 .privacy(Privacy.PUBLIC)
                 .input(0)
@@ -86,11 +86,12 @@ public class SilentGooseBot extends AbilityBot {
         sendMessage.setChatId(chatId);
         sendMessage.setReplyToMessageId(message.getMessageId());
 
-        MessageFormat messageFormat = new MessageFormat("Hello, <a href={0}>{1}</a>, " +
-                "You ard in a group, the group info blows\n" +
-                "ChatId:{2}\n" +
-                "ChatLink:{3}\n" +
-                "ChatName:{4}\n" + "<b>Wish You Happy Here</b>");
+        MessageFormat messageFormat = new MessageFormat("""
+                Hello, <a href={0}>{1}</a>, You ard in a group, the group info blows
+                ChatId:{2}
+                ChatLink:{3}
+                ChatName:{4}
+                <b>Wish You Happy Here</b>""");
 
         String[] args = {
                 AppConst.Tg.User.link_prefix.concat(String.valueOf(message.getFrom().getId())),
@@ -99,7 +100,9 @@ public class SilentGooseBot extends AbilityBot {
                 chat.getUserName(),
                 chat.getTitle()
         };
-        sendMessage.setText(messageFormat.format(args));
+        String sendText = messageFormat.format(args);
+        log.info("SendTest:{}", sendText);
+        sendMessage.setText(sendText);
         sendMessage.setParseMode(ParseMode.HTML);
         try {
             execute(sendMessage);
