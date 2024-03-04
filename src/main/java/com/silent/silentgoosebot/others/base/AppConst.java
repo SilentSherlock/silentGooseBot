@@ -40,7 +40,7 @@ public class AppConst {
 
         interface User {
             String link = "@";
-
+            String link_prefix = "tg://user?id=";
         }
 
         interface Command {
@@ -52,6 +52,7 @@ public class AppConst {
             String GROUPS_UNDER_WATCH = "groupsUnderWatch";
             String DRINK_WATER = "drinkwater";
             String CHAT_INFO = "chatinfo";
+            String WHERE_AM_I = "whereami";
         }
     }
 

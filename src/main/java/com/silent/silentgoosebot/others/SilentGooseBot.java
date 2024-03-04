@@ -63,6 +63,51 @@ public class SilentGooseBot extends AbilityBot {
 
     // region Ability
 
+    public Ability chatInfoInGroup() {
+        return Ability.builder()
+                .name(AppConst.Tg.Command.WHERE_AM_I)
+                .info("start drink water")
+                .locality(Locality.GROUP)
+                .privacy(Privacy.PUBLIC)
+                .input(0)
+                .action(this::getChatInfoInGroup)
+                .setStatsEnabled(true)
+                .build();
+    }
+
+    private void getChatInfoInGroup(MessageContext messageContext) {
+        log.info("Get current chat info in group");
+
+        long chatId = messageContext.chatId();
+        Message message = messageContext.update().getMessage();
+        Chat chat = message.getChat();
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setReplyToMessageId(message.getMessageId());
+
+        MessageFormat messageFormat = new MessageFormat("Hello, <a href={0}>{1}</a>, " +
+                "You ard in a group, the group info blows\n" +
+                "ChatId:{2}\n" +
+                "ChatLink:{3}\n" +
+                "ChatName:{4}\n" + "<b>Wish You Happy Here<b>");
+
+        String[] args = {
+                AppConst.Tg.User.link_prefix.concat(String.valueOf(message.getFrom().getId())),
+                message.getFrom().getFirstName(),
+                String.valueOf(chat.getId()),
+                chat.getUserName(),
+                chat.getTitle()
+        };
+        sendMessage.setText(messageFormat.format(args));
+        sendMessage.setParseMode(ParseMode.HTML);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
     /*public Ability getAllDrinkWaterGroup() {
         return null;
     }*/
