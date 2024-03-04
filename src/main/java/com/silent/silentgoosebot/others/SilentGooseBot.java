@@ -90,7 +90,7 @@ public class SilentGooseBot extends AbilityBot {
                 "You ard in a group, the group info blows\n" +
                 "ChatId:{2}\n" +
                 "ChatLink:{3}\n" +
-                "ChatName:{4}\n" + "<b>Wish You Happy Here<b>");
+                "ChatName:{4}\n" + "<b>Wish You Happy Here</b>");
 
         String[] args = {
                 AppConst.Tg.User.link_prefix.concat(String.valueOf(message.getFrom().getId())),
