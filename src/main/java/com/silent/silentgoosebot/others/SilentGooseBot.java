@@ -171,15 +171,19 @@ public class SilentGooseBot extends AbilityBot {
             messages.add(sendMessage);
         } else {
             schedules.forEach(groupMessageSchedule -> {
-                AutoMessageSendTimerTask.start(
-                        this,
-                        groupMessageSchedule,
-                        new HashMap<>()
-                );
-                SendMessage sendMessage = new SendMessage();
-                sendMessage.setChatId(messageContext.chatId());
-                sendMessage.setText("Drink Water start in " + groupMessageSchedule.getChatId());
-                messages.add(sendMessage);
+                if (null != groupMessageSchedule) {
+                    AutoMessageSendTimerTask.start(
+                            this,
+                            groupMessageSchedule,
+                            new HashMap<>()
+                    );
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setChatId(messageContext.chatId());
+                    sendMessage.setText("Drink Water start in " + groupMessageSchedule.getChatId());
+                    messages.add(sendMessage);
+                } else {
+                    log.error("groupMessageSchedule is null!");
+                }
             });
         }
         messages.forEach(sendMessage -> {
