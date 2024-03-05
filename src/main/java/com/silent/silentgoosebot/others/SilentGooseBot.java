@@ -1,21 +1,19 @@
 package com.silent.silentgoosebot.others;
 
-import com.google.common.collect.Lists;
 import com.silent.silentgoosebot.entity.GroupMessageSchedule;
 import com.silent.silentgoosebot.others.base.AppConst;
 import com.silent.silentgoosebot.others.base.BotUtils;
 import com.silent.silentgoosebot.others.base.MessageType;
 import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
 import com.silent.silentgoosebot.others.timer.AutoMessageSendTimerTask;
+import com.silent.silentgoosebot.others.utils.ContextUtils;
 import com.silent.silentgoosebot.service.TimerService;
-import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -36,17 +34,19 @@ import java.util.*;
  * 消息接受bot,接受监听到的消息并进行转发
  */
 @Slf4j
-public class SilentGooseBot extends AbilityBot implements ApplicationContextAware {
+public class SilentGooseBot extends AbilityBot {
 
     private TimerService timerService;
-    private ApplicationContext applicationContext;
 
     public SilentGooseBot(String botToken, String botUsername) {
         super(botToken, botUsername);
+
+        timerService = ContextUtils.getBean(TimerService.class);
     }
 
     public SilentGooseBot(String botToken, String botUsername, DefaultBotOptions options) {
         super(botToken, botUsername, options);
+        timerService = ContextUtils.getBean(TimerService.class);
     }
 
     @Override
@@ -476,13 +476,6 @@ public class SilentGooseBot extends AbilityBot implements ApplicationContextAwar
             }
         }, update -> update.hasMessage() && update.getMessage().getNewChatMembers().size() > 0); // 设置Reply的触发条件，这里是有新成员加入
     }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-        timerService = applicationContext.getBean(TimerService.class);
-    }
-
 
     // endregion
 }
