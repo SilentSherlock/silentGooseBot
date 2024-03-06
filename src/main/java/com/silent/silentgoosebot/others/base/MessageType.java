@@ -10,4 +10,5 @@ public enum MessageType {
     NAVIGATION,
     WEATHER,
     DRINK_WATER
+
 }
