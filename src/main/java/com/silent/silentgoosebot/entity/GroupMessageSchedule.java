@@ -18,7 +18,6 @@ public class GroupMessageSchedule {
 
     private Integer groupMessageScheduleId;
     private long chatId;
-    @EnumValue
     private MessageType messageType;
     private Integer autoMessageCreatorId;
     private long delay;
