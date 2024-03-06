@@ -1,5 +1,6 @@
 package com.silent.silentgoosebot.entity;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.silent.silentgoosebot.others.base.MessageType;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -17,6 +18,7 @@ public class GroupMessageSchedule {
 
     private Integer groupMessageScheduleId;
     private long chatId;
+    @EnumValue
     private MessageType messageType;
     private Integer autoMessageCreatorId;
     private long delay;
