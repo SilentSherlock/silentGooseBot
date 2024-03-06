@@ -4,6 +4,7 @@ import com.silent.silentgoosebot.entity.AutoMessageCreator;
 import com.silent.silentgoosebot.entity.GroupMessageSchedule;
 import com.silent.silentgoosebot.others.SilentGooseBot;
 import com.silent.silentgoosebot.others.message.AutoMessageCreateFactory;
+import com.silent.silentgoosebot.others.utils.ContextUtils;
 import com.silent.silentgoosebot.service.TimerService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,7 @@ import java.util.TimerTask;
 @Slf4j
 public class AutoMessageSendTimerTask extends TimerTask {
 
-    @Resource
     private TimerService timerService;
-
     private SilentGooseBot silentGooseBot;
     private Map<String, Object> dataMap;
     private GroupMessageSchedule groupMessageSchedule;
@@ -38,6 +37,7 @@ public class AutoMessageSendTimerTask extends TimerTask {
         this.silentGooseBot = silentGooseBot;
         this.dataMap = dataMap;
         this.groupMessageSchedule = groupMessageSchedule;
+        this.timerService = ContextUtils.getBean(TimerService.class);
     }
 
     /**
