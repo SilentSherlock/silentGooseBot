@@ -76,12 +76,10 @@ public class AutoMessageSendTimerTask extends TimerTask {
         }
 
         try {
-            if (message instanceof SendMessage) {
-                SendMessage send = (SendMessage) message;
+            if (message instanceof SendMessage send) {
                 send.setChatId(groupMessageSchedule.getChatId());
                 silentGooseBot.execute(send);
-            } else if (message instanceof SendPhoto) {
-                SendPhoto send = (SendPhoto) message;
+            } else if (message instanceof SendPhoto send) {
                 send.setChatId(groupMessageSchedule.getChatId());
                 silentGooseBot.execute(send);
             }

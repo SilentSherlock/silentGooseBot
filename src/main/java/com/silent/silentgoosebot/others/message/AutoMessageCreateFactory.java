@@ -2,12 +2,14 @@ package com.silent.silentgoosebot.others.message;
 
 import com.silent.silentgoosebot.entity.AutoMessageCreator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -23,7 +25,7 @@ public class AutoMessageCreateFactory {
 
     /**
      * create message by reflect
-     * @param creator class and method will be reflect
+     * @param creator class and method will be reflected
      * @param dataMap method params
      */
     public static Object createMessage(AutoMessageCreator creator, Map<String, Object> dataMap) {
@@ -33,7 +35,7 @@ public class AutoMessageCreateFactory {
         String methodName = creator.getMethodName();
         Class c = null;
         try {
-            c = Class.forName(classpath);
+            c = Class.forName(classpath.trim());
         } catch (ClassNotFoundException e) {
             log.error("Class: {} not found", classpath);
             e.printStackTrace();
@@ -43,7 +45,7 @@ public class AutoMessageCreateFactory {
         Method m = null;
         if (null != c) {
             try {
-                m = c.getDeclaredMethod(methodName, Map.class);
+                m = c.getDeclaredMethod(methodName.trim(), Map.class);
             } catch (NoSuchMethodException e) {
                 log.error("Method: {} not found", methodName);
                 e.printStackTrace();
@@ -75,7 +77,13 @@ public class AutoMessageCreateFactory {
                 + "一小时后我将继续提醒大家喝水\n"
                 + "和我一起成为一天8杯水的人吧！" + Arrays.toString(Character.toChars(0x1F64B));
         sendPhoto.setCaption(text);
-        sendPhoto.setPhoto(new InputFile(new File("classpath://static/image/drinkWater.jpg")));
+        File photo;
+        try {
+            photo = ResourceUtils.getFile("classpath:static/image/drinkWater.jpg");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        sendPhoto.setPhoto(new InputFile(photo));
         sendPhoto.setParseMode(ParseMode.HTML);
         return sendPhoto;
     }

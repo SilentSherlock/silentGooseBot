@@ -1,6 +1,7 @@
 package com.silent.silentgoosebot.entity;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.silent.silentgoosebot.others.base.MessageType;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -16,6 +17,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class GroupMessageSchedule {
 
+    @TableId
     private Integer groupMessageScheduleId;
     private long chatId;
     private MessageType messageType;

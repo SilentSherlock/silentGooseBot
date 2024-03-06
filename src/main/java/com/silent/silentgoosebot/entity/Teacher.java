@@ -1,5 +1,6 @@
 package com.silent.silentgoosebot.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class Teacher {
 
+    @TableId
     private String teacherTableId;
     private String channelId;
     private String teacherId;

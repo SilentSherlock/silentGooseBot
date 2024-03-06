@@ -1,5 +1,6 @@
 package com.silent.silentgoosebot.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class Channel {
 
+    @TableId
     private String channelTableId;
     private String channelId;
     private String channelName;
