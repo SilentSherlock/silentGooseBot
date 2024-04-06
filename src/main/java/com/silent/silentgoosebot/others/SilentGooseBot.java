@@ -193,7 +193,7 @@ public class SilentGooseBot extends AbilityBot {
     }
 
     /**
-     * get chat info by chat ID (Long or String start with @, 123456 or @IamAChat )
+     * get chat info by chat ID (Long or String start with @ or not, 123456 or @IamAChat or IamAChat )
      * @return
      */
     public Ability chatInfo() {
@@ -220,13 +220,19 @@ public class SilentGooseBot extends AbilityBot {
         } else {
             String chatId = args[0];
             log.info("Chat Info receive args {}", chatId);
-            if (!BotUtils.isChatId(chatId)) {
+            if (!BotUtils.isChatId(chatId) && !BotUtils.isTgHttp(chatId)) {
                 sendMessage.setText("Chat Id illegal:" + chatId);
             } else {
                 log.info("Get Chat Info");
                 GetChat getChat = new GetChat();
                 if (chatId.startsWith("@")) getChat.setChatId(chatId);
-                else getChat.setChatId(Long.parseLong(chatId));
+                else if (BotUtils.isTgHttp(chatId)) {
+                    String str = "@" + chatId.substring(chatId.lastIndexOf("/") + 1);
+                    log.info("cur Str is {}", str);
+                    getChat.setChatId(str);
+                } else {
+                    getChat.setChatId(Long.parseLong(chatId));
+                }
                 try {
                     Chat chatInfo = execute(getChat);
                     if (null == chatInfo) {

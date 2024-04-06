@@ -29,4 +29,16 @@ public class BotUtils {
     public static boolean isChatId(String chatId) {
         return chatId.matches("-?\\d{10,13}") || chatId.matches("@?(\\w{5,32})");
     }
+
+    public static boolean isTgHttp(String httpUrl) {
+        return httpUrl.matches("https://t\\.me/(joinchat/)?[a-zA-Z0-9_-]{5,32}");
+    }
+
+    public static void main(String[] args) {
+        String str = "kjdalf";
+        log.info("" + str.matches("-?\\d{10,13}"));
+        log.info("" + str.matches("@\\w{5,32}"));
+        String httpUrl = "https://t.me/moduguangmingding";
+        log.info("httpUrl is " + isTgHttp(httpUrl));
+    }
 }
