@@ -8,6 +8,7 @@ import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -23,9 +24,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @Slf4j
 public class BotController {
 
-
-
-    @RequestMapping(value = "/botStart")
+    @RequestMapping(value = "/botStart", method = RequestMethod.GET)
     public void botStart() {
 
         DefaultBotOptions options = BotUtils.getDefaultOption();
@@ -45,7 +44,7 @@ public class BotController {
 
     }
 
-    @RequestMapping(value = "/appStart")
+    @RequestMapping(value = "/appStart", method = RequestMethod.GET)
     public void appStart() throws Exception{
         //initialize native lib
         MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread();
