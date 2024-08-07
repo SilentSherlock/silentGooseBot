@@ -33,6 +33,7 @@ public class AppConst {
         String user_phone_number = "user_phone_number";
         String prefix = "https://t.me/";
         String creator_id = "creator_id";
+        String MoistClient = "moistLifeApp";
 
         interface Group {
             String welcome = "欢迎新成员加入";

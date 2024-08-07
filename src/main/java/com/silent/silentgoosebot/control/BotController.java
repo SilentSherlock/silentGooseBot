@@ -1,11 +1,9 @@
 package com.silent.silentgoosebot.control;
 
-import com.silent.silentgoosebot.others.MoistLifeAppThread;
 import com.silent.silentgoosebot.others.SilentGooseBot;
 import com.silent.silentgoosebot.others.base.AppConst;
 import com.silent.silentgoosebot.others.base.BotUtils;
 import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,11 +42,9 @@ public class BotController {
 
     }
 
-    @RequestMapping(value = "/appStart", method = RequestMethod.GET)
+    @RequestMapping(value = "/appStart", method = RequestMethod.POST)
     public void appStart() throws Exception{
-        //initialize native lib
-        MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread();
-        Thread thread = new Thread(moistLifeAppThread, "MoistLife86");
-        thread.start();
+
+        // todo 增加app启动处理逻辑
     }
 }

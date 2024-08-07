@@ -1,11 +1,19 @@
 package com.silent.silentgoosebot.others;
 
-import it.tdlight.client.SimpleAuthenticationSupplier;
-import it.tdlight.client.SimpleTelegramClient;
-import it.tdlight.client.SimpleTelegramClientBuilder;
+import com.silent.silentgoosebot.others.base.AppConst;
+import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
+import com.silent.silentgoosebot.others.utils.ContextUtils;
+import it.tdlight.Init;
+import it.tdlight.client.*;
 import it.tdlight.jni.TdApi;
+import it.tdlight.util.UnsupportedNativeLibraryException;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -14,83 +22,84 @@ import java.util.Scanner;
  * Description: my own tg application
  */
 @Slf4j
-public class MoistLifeApp implements AutoCloseable{
+@Data
+public class MoistLifeApp {
 
     private final SimpleTelegramClient client;
+    private final SimpleTelegramClientBuilder builder;
+    private final SimpleAuthenticationSupplier<?> authenticationSupplier;
+    private final boolean runFlag;
 
-    public SimpleTelegramClient getClient() {
-        return client;
-    }
-
-    public MoistLifeApp(SimpleTelegramClientBuilder builder, SimpleAuthenticationSupplier<?> authenticationSupplier) {
-
-        //add start handler
-        builder.addUpdateHandler(TdApi.UpdateAuthorizationState.class, this::onUpdateAuthorizationState);
-        //add msg handler
-        builder.addUpdateHandler(TdApi.UpdateNewMessage.class, this::onUpdateNewMessage);
-        //add user log handler
-        builder.addUpdateHandler(TdApi.UpdateUserStatus.class, this::onUpdateUserStatus);
-
-        this.client = builder.build(authenticationSupplier);
+    public MoistLifeApp(@NotNull SimpleTelegramClientBuilder builder,
+                        @NotNull SimpleAuthenticationSupplier<?> authenticationSupplier,
+                        @NotNull SimpleTelegramClient client) {
+        this.builder = builder;
+        this.client = client;
+        this.authenticationSupplier = authenticationSupplier;
+        this.runFlag = true;
     }
 
     /**
-     * handle user state update
-     * @param update
+     * start MoistLife by login
+     * @param context application context
+     * @param phoneNumber login account
+     * @param handler handle login state status
      */
-    private void onUpdateAuthorizationState(TdApi.UpdateAuthorizationState update) {
-        TdApi.AuthorizationState state = update.authorizationState;
-        if (state instanceof TdApi.AuthorizationStateReady) {
-            log.info("user logged in");
-        } else if (state instanceof TdApi.AuthorizationStateClosing) {
-            log.info("user closing");
-        } else if (state instanceof TdApi.AuthorizationStateClosed) {
-            log.info("user close");
-        } else if (state instanceof TdApi.AuthorizationStateLoggingOut) {
-            log.info("user logged out");
-        } else if (state instanceof TdApi.AuthorizationStateWaitCode) {
-            System.out.println("请输入获取到的验证码");
-            Scanner scanner = new Scanner(System.in);
-            String code = scanner.nextLine();
+    public static MoistLifeApp login(String phoneNumber,
+                                     GenericUpdateHandler<TdApi.UpdateAuthorizationState> handler) {
 
-            // 发送验证码到 TDLib
-            client.send(new TdApi.CheckAuthenticationCode(code), result -> {
-                if (result.isError()){
-                    log.info("验证码错误");
-                }
-            });
-        } else if (state instanceof TdApi.AuthorizationStateWaitPassword) {
-            // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
-            System.out.println("请输入您的两步验证密码:");
-            Scanner scanner = new Scanner(System.in);
-            String password = scanner.nextLine();
-
-            // 发送两步验证密码到 TDLib
-            client.send(new TdApi.CheckAuthenticationPassword(password), result -> {
-                if (result.isError()) {
-                    // 如果有错误，打印错误信息
-                    System.out.println("两步验证密码验证失败: " + result.getError().message);
-                } else {
-                    // 如果验证成功，继续后续操作
-                    System.out.println("两步验证密码验证成功!");
-                }
-            });
+        log.info("MoistLifeApp starting!");
+        MoistLifeApp moistLifeApp = null;
+        try {
+            Init.init();
+        } catch (UnsupportedNativeLibraryException e) {
+            throw new RuntimeException(e);
         }
+
+        try {
+            SimpleTelegramClientFactory clientFactory = new SimpleTelegramClientFactory();
+            APIToken apiToken = new APIToken(Integer.parseInt(Objects.requireNonNull(MyPropertiesUtil.getProperty(AppConst.Tg.app_api_id))),
+                    MyPropertiesUtil.getProperty(AppConst.Tg.app_api_hash));
+
+            TDLibSettings settings = TDLibSettings.create(apiToken);
+            //configure session
+            Path sessionPath = Paths.get("tdlib-session-" + phoneNumber);
+            settings.setDatabaseDirectoryPath(sessionPath.resolve("data"));
+            settings.setDownloadedFilesDirectoryPath(sessionPath.resolve("downloads"));
+
+            //prepare a client builder
+            SimpleTelegramClientBuilder builder = clientFactory.builder(settings);
+            builder.addUpdateHandler(TdApi.UpdateAuthorizationState.class, handler);
+
+            //configure authentication
+            SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user(phoneNumber);
+            try {
+                SimpleTelegramClient client = builder.build(supplier);
+                moistLifeApp = new MoistLifeApp(builder, supplier, client);
+                log.info("send proxy");
+                TdApi.AddProxy proxy = new TdApi.AddProxy(
+                        AppConst.Proxy.proxy_host,
+                        AppConst.Proxy.proxy_port,
+                        true,
+                        new TdApi.ProxyTypeHttp()
+                );
+
+                client.send(proxy, result -> {
+                    log.info("proxy set success");
+                });
+                log.info("context.setMoistLifeApp(moistLifeApp)");
+                ContextUtils.setBean("moistLifeApp", moistLifeApp);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        log.info("Login end");
+        return moistLifeApp;
     }
 
-    /**
-     * handle user login or logout
-     * @param update
-     */
-    private void onUpdateUserStatus(TdApi.UpdateUserStatus update) {
-        TdApi.UserStatus userStatus = update.status;
-        long userid = update.userId;
-        if (userStatus instanceof TdApi.UserStatusOffline) {
-            log.info("user off line, real" + userid);
-        } else if (userStatus instanceof TdApi.UserStatusOnline) {
-            log.info("user on line, real" + userid);
-        }
-    }
+
 
     /**
      * handle new Msg
@@ -125,9 +134,5 @@ public class MoistLifeApp implements AutoCloseable{
                 });
     }
 
-    @Override
-    public void close() throws Exception {
-        client.close();
-    }
 
 }
