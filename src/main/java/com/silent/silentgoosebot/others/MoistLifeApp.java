@@ -41,7 +41,6 @@ public class MoistLifeApp {
 
     /**
      * start MoistLife by login
-     * @param context application context
      * @param phoneNumber login account
      * @param handler handle login state status
      */
