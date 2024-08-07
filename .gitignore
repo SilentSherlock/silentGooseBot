@@ -45,3 +45,5 @@ logs/
 *.log
 /lib/
 /tdlib-session-57066/
+/backup.json
+/SilentGooseBot
