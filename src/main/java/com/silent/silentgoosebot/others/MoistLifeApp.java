@@ -1,5 +1,6 @@
 package com.silent.silentgoosebot.others;
 
+import com.silent.silentgoosebot.others.base.AppAccountMap;
 import com.silent.silentgoosebot.others.base.AppConst;
 import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
 import com.silent.silentgoosebot.others.utils.ContextUtils;
@@ -14,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * Date: 2023/12/6
@@ -87,7 +87,7 @@ public class MoistLifeApp {
                     log.info("proxy set success");
                 });
                 log.info("context.setMoistLifeApp(moistLifeApp)");
-                ContextUtils.setBean("moistLifeApp", moistLifeApp);
+                ContextUtils.getBean(AppAccountMap.class).getAccountMap().put(phoneNumber, moistLifeApp);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

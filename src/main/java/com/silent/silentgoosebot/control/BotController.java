@@ -2,12 +2,10 @@ package com.silent.silentgoosebot.control;
 
 import com.silent.silentgoosebot.others.MoistLifeApp;
 import com.silent.silentgoosebot.others.SilentGooseBot;
-import com.silent.silentgoosebot.others.base.AppConst;
-import com.silent.silentgoosebot.others.base.BotUtils;
-import com.silent.silentgoosebot.others.base.MyPropertiesUtil;
-import com.silent.silentgoosebot.others.base.Result;
+import com.silent.silentgoosebot.others.base.*;
 import com.silent.silentgoosebot.others.utils.ContextUtils;
 import it.tdlight.jni.TdApi;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,17 +32,14 @@ import java.util.concurrent.ForkJoinPool;
 @Slf4j
 public class BotController {
 
-    private final ContextUtils contextUtils;
-
-    public BotController(ContextUtils contextUtils) {
-        this.contextUtils = contextUtils;
-    }
+    @Resource
+    private AppAccountMap appAccountMap;
 
     @RequestMapping(value = "/botStart", method = RequestMethod.GET)
     public void botStart() {
 
         DefaultBotOptions options = BotUtils.getDefaultOption();
-        log.info("botToken:" + MyPropertiesUtil.getProperty(AppConst.Tg.bot_token));
+        log.info("botToken:{}", MyPropertiesUtil.getProperty(AppConst.Tg.bot_token));
         SilentGooseBot bot = new SilentGooseBot(
                 MyPropertiesUtil.getProperty(AppConst.Tg.bot_token),
                 MyPropertiesUtil.getProperty(AppConst.Tg.bot_username),
@@ -140,7 +135,7 @@ public class BotController {
             ForkJoinPool.commonPool().submit(() ->  {
                 try {
 
-                    ContextUtils.getBean(MoistLifeApp.class).getClient().send(new TdApi.CheckAuthenticationCode(waitCode), result -> {
+                    appAccountMap.getAccountMap().get(phone).getClient().send(new TdApi.CheckAuthenticationCode(waitCode), result -> {
                         if (result.isError()) {
                             log.info("check authentication code failed");
                             deferredResult.setResult(Result.createByFalse("check authentication code failed"));
@@ -166,7 +161,7 @@ public class BotController {
             ForkJoinPool.commonPool().submit(() ->  {
                 try {
 
-                    ContextUtils.getBean(MoistLifeApp.class).getClient().send(new TdApi.CheckAuthenticationCode(waitPassword), result -> {
+                    appAccountMap.getAccountMap().get(phone).getClient().send(new TdApi.CheckAuthenticationCode(waitPassword), result -> {
                         if (result.isError()) {
                             log.info("check authentication password failed");
                             deferredResult.setResult(Result.createByFalse("check authentication password failed"));
