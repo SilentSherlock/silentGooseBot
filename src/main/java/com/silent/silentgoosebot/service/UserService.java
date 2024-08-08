@@ -5,7 +5,7 @@ import com.silent.silentgoosebot.dao.UserDao;
 import com.silent.silentgoosebot.entity.User;
 import com.silent.silentgoosebot.others.base.Result;
 import jakarta.annotation.Resource;
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;

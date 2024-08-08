@@ -1,9 +1,11 @@
 package com.silent.silentgoosebot.control;
 
+import com.silent.silentgoosebot.entity.TgAccount;
 import com.silent.silentgoosebot.others.MoistLifeApp;
 import com.silent.silentgoosebot.others.SilentGooseBot;
 import com.silent.silentgoosebot.others.base.*;
 import com.silent.silentgoosebot.others.utils.ContextUtils;
+import com.silent.silentgoosebot.service.TgAccountService;
 import it.tdlight.jni.TdApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
@@ -34,6 +37,16 @@ public class BotController {
 
     @Resource
     private AppAccountMap appAccountMap;
+    @Resource
+    private TgAccountService tgAccountService;
+
+    @RequestMapping(value = "/getAllPhone")
+    public Result getAllTgAccount() {
+        List<TgAccount> accounts = tgAccountService.getAllAccounts();
+        Result result = Result.createBySuccess();
+        result.getResultMap().put("tgAccounts", accounts);
+        return result;
+    }
 
     @RequestMapping(value = "/botStart", method = RequestMethod.GET)
     public void botStart() {
@@ -65,7 +78,7 @@ public class BotController {
      * @throws Exception
      */
     @RequestMapping(value = "/appStart", method = RequestMethod.POST)
-    public DeferredResult appStart(String phone, String waitCode, String waitPassword, String state) throws Exception{
+    public DeferredResult appStart(String phone, String waitCode, String waitPassword, String state) throws Exception {
         log.info("app starting phone {} waitCode {} waitPassword {} state {}", phone, waitCode, waitPassword, state);
 
         //构建异步返回结果
