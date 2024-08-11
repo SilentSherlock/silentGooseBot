@@ -40,7 +40,7 @@ public class BotController {
     @Resource
     private TgAccountService tgAccountService;
 
-    @RequestMapping(value = "/getAllPhone")
+    @RequestMapping(value = "/getAllTgAccount")
     public Result getAllTgAccount() {
         List<TgAccount> accounts = tgAccountService.getAllAccounts();
         Result result = Result.createBySuccess();

@@ -1,6 +1,5 @@
 package com.silent.silentgoosebot.service;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.silent.silentgoosebot.dao.TgAccountDao;
 import com.silent.silentgoosebot.entity.TgAccount;
 import jakarta.annotation.Resource;
@@ -16,5 +15,9 @@ public class TgAccountService {
 
     public List<TgAccount> getAllAccounts() {
         return tgAccountDao.selectAllAccount();
+    }
+
+    public int addAccount(TgAccount account) {
+        return tgAccountDao.insert(account);
     }
 }
