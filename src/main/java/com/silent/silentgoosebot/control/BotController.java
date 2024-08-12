@@ -10,6 +10,7 @@ import it.tdlight.jni.TdApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,7 +83,7 @@ public class BotController {
         log.info("app starting phone {} waitCode {} waitPassword {} state {}", phone, waitCode, waitPassword, state);
 
         //构建异步返回结果
-        DeferredResult<Result> deferredResult = new DeferredResult<>(5000L, "Login Timeout");
+        DeferredResult<Result> deferredResult = new DeferredResult<>(50000L, "Login Timeout");
 
         //开始登录
         if ("0".equals(state)) {
@@ -103,6 +104,7 @@ public class BotController {
                     //启动并注册登录回调函数
                     MoistLifeApp.login(phone, update -> {
                         TdApi.AuthorizationState authorizationState = update.authorizationState;
+                        log.info("MoistLifeApp authorizationState {}", authorizationState);
                         if (authorizationState instanceof TdApi.AuthorizationStateReady) {
                             log.info("user logged in, put moistLifeApp into context");
 //                        context.setMoistLifeApp(moistLifeApp);
@@ -130,8 +132,8 @@ public class BotController {
                         }
                     });
 
-                    // 休眠3秒保证注册的回调函数完成
-                    Thread.sleep(3000);
+                    // 休眠10秒保证注册的回调函数完成
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
