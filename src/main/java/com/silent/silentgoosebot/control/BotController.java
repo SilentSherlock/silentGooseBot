@@ -107,6 +107,9 @@ public class BotController {
                         log.info("MoistLifeApp authorizationState {}", authorizationState);
                         if (authorizationState instanceof TdApi.AuthorizationStateReady) {
                             log.info("user logged in, put moistLifeApp into context");
+                            Result result = Result.createBySuccess("login success");
+                            result.getResultMap().put("state", 3);
+                            deferredResult.setResult(result);
 //                        context.setMoistLifeApp(moistLifeApp);
                             // todo 添加登录完成逻辑
                         } else if (authorizationState instanceof TdApi.AuthorizationStateClosing) {
@@ -155,7 +158,9 @@ public class BotController {
                             log.info("check authentication code failed");
                             deferredResult.setResult(Result.createByFalse("check authentication code failed"));
                         } else {
-                            deferredResult.setResult(Result.createBySuccess("wait code check success"));
+                            Result result1 = Result.createBySuccess("wait code check success");
+                            result1.getResultMap().put("state", 3);
+                            deferredResult.setResult(result1);
                         }
                     });
                     // 休眠2秒保证回调完成
@@ -181,7 +186,9 @@ public class BotController {
                             log.info("check authentication password failed");
                             deferredResult.setResult(Result.createByFalse("check authentication password failed"));
                         } else {
-                            deferredResult.setResult(Result.createBySuccess("wait password check success"));
+                            Result result1 = Result.createBySuccess("wait password check success");
+                            result1.getResultMap().put("state", 3);
+                            deferredResult.setResult(result1);
                         }
                     });
                     // 休眠2秒保证回调完成
