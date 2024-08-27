@@ -152,8 +152,9 @@ public class BotController {
             //开始发送wait code, 此时tdlight-java已经初始化并放在context中
             ForkJoinPool.commonPool().submit(() ->  {
                 try {
-
-                    appAccountMap.getAccountMap().get(phone).getClient().send(new TdApi.CheckAuthenticationCode(waitCode), result -> {
+                    log.info("wait code start flying");
+                    MoistLifeApp moistLifeApp = appAccountMap.getAccountMap().get(phone);
+                    moistLifeApp.getClient().send(new TdApi.CheckAuthenticationCode(waitCode), result -> {
                         if (result.isError()) {
                             log.info("check authentication code failed");
                             deferredResult.setResult(Result.createByFalse("check authentication code failed"));
@@ -164,7 +165,9 @@ public class BotController {
                         }
                     });
                     // 休眠2秒保证回调完成
-                    Thread.sleep(2000);
+                    log.info("wait code start sleeping");
+                    Thread.sleep(5000);
+                    log.info("wait code wake up");
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -181,7 +184,7 @@ public class BotController {
             ForkJoinPool.commonPool().submit(() ->  {
                 try {
 
-                    appAccountMap.getAccountMap().get(phone).getClient().send(new TdApi.CheckAuthenticationCode(waitPassword), result -> {
+                    appAccountMap.getAccountMap().get(phone).getClient().send(new TdApi.CheckAuthenticationPassword(waitPassword), result -> {
                         if (result.isError()) {
                             log.info("check authentication password failed");
                             deferredResult.setResult(Result.createByFalse("check authentication password failed"));
@@ -192,7 +195,7 @@ public class BotController {
                         }
                     });
                     // 休眠2秒保证回调完成
-                    Thread.sleep(2000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

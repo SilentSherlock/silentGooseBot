@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+
 /**
  * Date: 2023/12/13
  * Author: SilentSherlock
@@ -16,7 +18,9 @@ public class BeanConfig {
 
     @Bean
     public AppAccountMap getAppAccountMap() {
-        return new AppAccountMap();
+        AppAccountMap appAccountMap = new AppAccountMap();
+        appAccountMap.setAccountMap(new HashMap<>());
+        return appAccountMap;
     }
 
 }

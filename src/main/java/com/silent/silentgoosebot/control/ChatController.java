@@ -47,5 +47,11 @@ public class ChatController {
                 userChats.add(chat);
             }
         }
+        Result result = Result.createBySuccess();
+        result.getResultMap().put("userChats", userChats);
+        result.getResultMap().put("groupChats", groupChats);
+        result.getResultMap().put("channelChats", channelChats);
+
+        return result;
     }
 }
