@@ -29,4 +29,8 @@ public class MessageProcessorService {
     public MessageProcessor selectOne(QueryWrapper<MessageProcessor> wrapper) {
         return messageProcessorDao.selectOne(wrapper);
     }
+
+    public MessageProcessor selectById(String id) {
+        return messageProcessorDao.selectById(id);
+    }
 }

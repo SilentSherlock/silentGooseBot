@@ -1,9 +1,10 @@
 package com.silent.silentgoosebot.service;
 
 import com.silent.silentgoosebot.dao.ChannelDao;
+import com.silent.silentgoosebot.dao.GroupMessageScheduleDao;
+import com.silent.silentgoosebot.dao.MessageProcessorDao;
 import com.silent.silentgoosebot.entity.Channel;
 import com.silent.silentgoosebot.others.MoistLifeApp;
-import com.silent.silentgoosebot.others.base.Result;
 import it.tdlight.jni.TdApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,10 @@ public class ChatService {
 
     @Resource
     private ChannelDao channelDao;
+    @Resource
+    private GroupMessageScheduleDao groupMessageScheduleDao;
+    @Resource
+    private MessageProcessorDao messageProcessorDao;
 
     public int addChannel(Channel channel) {
         return channelDao.insert(channel);
