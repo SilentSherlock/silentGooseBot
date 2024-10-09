@@ -51,7 +51,7 @@ public class ChatSchedule {
                     // 异步获取账号对应的聊天，等待结果返回后处理
                     CompletableFuture<TdApi.Chat> chatCompletableFuture = moistLifeApp.getClient().send(new TdApi.GetChat(messageStatisticsSchedule.getChatId()));
                     TdApi.Chat chat = chatCompletableFuture.join();
-                    chatsMessageProcessor.process(chat, moistLifeApp, true);
+                    chatsMessageProcessor.process(chat, moistLifeApp);
                 } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
                          IllegalAccessException | NoSuchMethodException e) {
                     throw new RuntimeException(e);

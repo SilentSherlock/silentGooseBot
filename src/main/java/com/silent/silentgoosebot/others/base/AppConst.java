@@ -34,6 +34,7 @@ public class AppConst {
         String prefix = "https://t.me/";
         String creator_id = "creator_id";
         String MoistClient = "moistLifeApp";
+        int message_max_size = 10000;
 
         interface Group {
             String welcome = "欢迎新成员加入";

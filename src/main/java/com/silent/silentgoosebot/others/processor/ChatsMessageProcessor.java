@@ -15,10 +15,9 @@ public interface ChatsMessageProcessor {
     /**
      * process single message
      * @param chat message history in this chat will be fetched and processed
-     * @param firstFlag true--message history never processed, will fetch message history up to message_max_size, even if the message viewed or not
      */
-    void process(TdApi.Chat chat, MoistLifeApp moistLifeApp, boolean firstFlag);
-    void process(List<TdApi.Chat> chats, MoistLifeApp moistLifeApp, boolean firstFlag);
+    void process(TdApi.Chat chat, MoistLifeApp moistLifeApp);
+    void process(List<TdApi.Chat> chats, MoistLifeApp moistLifeApp);
 
     /**
      *
