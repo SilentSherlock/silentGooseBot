@@ -1,11 +1,19 @@
 package com.silent.silentgoosebot.others.processor.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.silent.silentgoosebot.dao.TeacherMessageSequenceDao;
+import com.silent.silentgoosebot.entity.TeacherMessageSequence;
 import com.silent.silentgoosebot.others.MoistLifeApp;
 import com.silent.silentgoosebot.others.base.AppConst;
 import com.silent.silentgoosebot.others.processor.ChatsMessageProcessor;
+import com.silent.silentgoosebot.others.utils.ContextUtils;
 import it.tdlight.jni.TdApi;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -34,7 +42,23 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
             );
 
             TdApi.Messages messages = messagesCompletableFuture.join();
-            Arrays.stream(messages.messages).forEach(message -> {
+            //先落流水表再处理，流水表中存在的message不再处理
+            TeacherMessageSequenceDao teacherMessageSequenceDao = ContextUtils.getBean(TeacherMessageSequenceDao.class);
+            List<TdApi.Message> unprocessedMessages = getMessages(messages, teacherMessageSequenceDao);
+            unprocessedMessages.forEach(message -> {
+                TeacherMessageSequence teacherMessageSequence = new TeacherMessageSequence();
+                try {
+                    teacherMessageSequence.setChatId(message.chatId)
+                            .setMessageId(message.id)
+                            .setTeacherMessage(new ObjectMapper().writeValueAsString(message));
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+                teacherMessageSequenceDao.insert(teacherMessageSequence);
+            });
+
+            //处理消息内容
+            unprocessedMessages.forEach(message -> {
                 log.info("message {}", message);
                 // todo 处理消息内容
             });
@@ -44,14 +68,26 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
             if (messages.messages.length < 100 || totalMessages >= AppConst.Tg.message_max_size) {
                 processShutDown = true;
             }
-
-
         }
 
     }
 
+    private static @NotNull List<TdApi.Message> getMessages(TdApi.Messages messages, TeacherMessageSequenceDao teacherMessageSequenceDao) {
+        List<TdApi.Message> messageList = Arrays.asList(messages.messages);
+        List<TdApi.Message> unprocessedMessages = new ArrayList<>();
+        messageList.forEach(message -> {
+            LambdaQueryWrapper<TeacherMessageSequence> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(TeacherMessageSequence::getChatId, message.chatId);
+            lambdaQueryWrapper.eq(TeacherMessageSequence::getMessageId, message.id);
+            if (teacherMessageSequenceDao.selectCount(lambdaQueryWrapper) > 0) {
+                unprocessedMessages.add(message);
+            }
+        });
+        return unprocessedMessages;
+    }
+
     @Override
     public void process(List<TdApi.Chat> chats, MoistLifeApp moistLifeApp) {
-
+        chats.forEach(chat -> process(chat, moistLifeApp));
     }
 }
