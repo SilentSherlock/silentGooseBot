@@ -5,7 +5,7 @@ import com.silent.silentgoosebot.dao.MessageStatisticsScheduleDao;
 import com.silent.silentgoosebot.entity.MessageStatisticsSchedule;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

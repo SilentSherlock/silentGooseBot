@@ -11,6 +11,7 @@ import com.silent.silentgoosebot.service.MessageStatisticsScheduleService;
 import it.tdlight.jni.TdApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +35,7 @@ public class ChatSchedule {
     /**
      * 启动scheduleType=0的定时任务
      */
+    @Scheduled(cron = "")
     public void JobScheduleType0() {
         String scheduleType = "0";
         List<MessageStatisticsSchedule> messageStatisticsScheduleList = messageStatisticsScheduleService.getMessageStatisticsScheduleByType(scheduleType);

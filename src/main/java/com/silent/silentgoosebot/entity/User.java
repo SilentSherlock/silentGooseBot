@@ -3,6 +3,9 @@ package com.silent.silentgoosebot.entity;
 import com.silent.silentgoosebot.others.base.Role;
 import lombok.Data;
 
+/**
+ * silentGooseBot的用户角色
+ */
 @Data
 public class User {
 
