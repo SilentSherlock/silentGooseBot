@@ -108,7 +108,7 @@ public class BotController {
                         if (authorizationState instanceof TdApi.AuthorizationStateReady) {
                             log.info("user logged in, put moistLifeApp into context");
                             Result result = Result.createBySuccess("login success");
-                            result.getResultMap().put("state", 3);
+                            result.getResultMap().put("state", "3");
                             deferredResult.setResult(result);
 //                        context.setMoistLifeApp(moistLifeApp);
                             // todo 添加登录完成逻辑
@@ -121,7 +121,7 @@ public class BotController {
                         } else if (authorizationState instanceof TdApi.AuthorizationStateWaitCode) {
                             Result result = Result.createBySuccess("need wait code");
                             Map<String, Object> resultMap = new HashMap<>();;
-                            resultMap.put("state", 1);
+                            resultMap.put("state", "1");
                             result.setResultMap(resultMap);
                             deferredResult.setResult(result);
 
@@ -129,7 +129,7 @@ public class BotController {
                             // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
                             Result result = Result.createBySuccess("need wait password");
                             Map<String, Object> resultMap = new HashMap<>();;
-                            resultMap.put("state", 2);
+                            resultMap.put("state", "2");
                             result.setResultMap(resultMap);
                             deferredResult.setResult(result);
                         }
@@ -160,7 +160,7 @@ public class BotController {
                             deferredResult.setResult(Result.createByFalse("check authentication code failed"));
                         } else {
                             Result result1 = Result.createBySuccess("wait code check success");
-                            result1.getResultMap().put("state", 3);
+                            result1.getResultMap().put("state", "3");
                             deferredResult.setResult(result1);
                         }
                     });
@@ -190,7 +190,7 @@ public class BotController {
                             deferredResult.setResult(Result.createByFalse("check authentication password failed"));
                         } else {
                             Result result1 = Result.createBySuccess("wait password check success");
-                            result1.getResultMap().put("state", 3);
+                            result1.getResultMap().put("state", "3");
                             deferredResult.setResult(result1);
                         }
                     });

@@ -8,6 +8,7 @@ import it.tdlight.jni.TdApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class ChatController {
     @Resource
     private ChatService chatService;
 
-    @RequestMapping("/getUserChats")
+    @RequestMapping(value = "/getUserChats", method = RequestMethod.POST)
     public Result getUserChats(String phoneNumber) {
         MoistLifeApp curAccount = appAccountMap.getAccountMap().get(phoneNumber);
         if (curAccount == null) {
