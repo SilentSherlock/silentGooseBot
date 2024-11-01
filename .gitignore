@@ -37,9 +37,7 @@ out/
 .vscode/
 
 ### Project ###
-test/*
 *.properties
-/src/test/
 *.jar
 logs/
 *.log
