@@ -33,4 +33,8 @@ public class MessageProcessorService {
     public MessageProcessor selectById(String id) {
         return messageProcessorDao.selectById(id);
     }
+
+    public int addMessageProcessor(MessageProcessor messageProcessor) {
+        return messageProcessorDao.insert(messageProcessor);
+    }
 }

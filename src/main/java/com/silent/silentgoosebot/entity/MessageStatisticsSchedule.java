@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class MessageStatisticsSchedule {
 
     @TableId
-    private Integer messageStatisticScheduleId;
+    private String messageStatisticScheduleId;
     private String phone;
     private long chatId;
     private String scheduleType;
