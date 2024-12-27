@@ -3,6 +3,7 @@ package com.silent.silentgoosebot.control;
 import com.silent.silentgoosebot.others.MoistLifeApp;
 import com.silent.silentgoosebot.others.base.AppAccountMap;
 import com.silent.silentgoosebot.others.base.Result;
+import com.silent.silentgoosebot.schedule.ChatSchedule;
 import com.silent.silentgoosebot.service.ChatService;
 import it.tdlight.jni.TdApi;
 import jakarta.annotation.Resource;
@@ -23,6 +24,9 @@ public class ChatController {
 
     @Resource
     private ChatService chatService;
+
+    @Resource
+    private ChatSchedule chatSchedule;
 
     @RequestMapping(value = "/getUserChats", method = RequestMethod.POST)
     public Result getUserChats(String phoneNumber) {
@@ -54,5 +58,18 @@ public class ChatController {
         result.getResultMap().put("channelChats", channelChats);
 
         return result;
+    }
+
+    @RequestMapping(value = "/chatSchedule", method = RequestMethod.POST)
+    public Result chatSchedule(String scheduleType) {
+        if (scheduleType == null) {
+            return Result.createByFalse("scheduleType is null");
+        }
+        switch (scheduleType) {
+            case "0":
+                chatSchedule.JobScheduleType0();
+                break;
+        }
+        return Result.createBySuccess();
     }
 }
