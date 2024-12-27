@@ -58,7 +58,16 @@ public class ServiceTest {
         List<MessageStatisticsSchedule> messageStatisticsSchedules = new ArrayList<>();
         MessageStatisticsSchedule messageStatisticsSchedule = new MessageStatisticsSchedule();
         messageStatisticsSchedule.setMessageStatisticScheduleId(IdGenerator.getNextMessageStatisticsScheduleId());
+        messageStatisticsSchedule.setPhone("+44 7917 941607");
+        messageStatisticsSchedule.setChatId(-1001692633324L);
+        messageStatisticsSchedule.setScheduleType("0");
+        messageStatisticsSchedule.setMessageProcessorId("");
+        messageStatisticsSchedule.setCreateTime(LocalDateTime.now());
+        messageStatisticsSchedule.setUpdateTime(LocalDateTime.now());
+        messageStatisticsSchedules.add(messageStatisticsSchedule);
+        messageStatisticsSchedules.forEach(messageStatisticsSchedule1 -> {
+            messageStatisticsScheduleService.addMessageStatisticsSchedule(messageStatisticsSchedule1);
+        });
 
-//        messageStatisticsScheduleService.addMessageStatisticsSchedule();
     }
 }

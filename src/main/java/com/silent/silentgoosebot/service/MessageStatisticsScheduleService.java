@@ -22,4 +22,7 @@ public class MessageStatisticsScheduleService {
         return messageStatisticsScheduleDao.selectList(queryWrapper);
     }
 
+    public int addMessageStatisticsSchedule(MessageStatisticsSchedule messageStatisticsSchedule) {
+        return messageStatisticsScheduleDao.insert(messageStatisticsSchedule);
+    }
 }
