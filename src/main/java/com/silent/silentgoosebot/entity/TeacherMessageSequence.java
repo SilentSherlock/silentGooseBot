@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 public class TeacherMessageSequence {
 
     @TableId
-    private Integer teacherMessageSequenceId;
+    private String teacherMessageSequenceId;
     private long chatId;
     private long messageId;
     private String teacherMessage;
     private LocalDateTime createTime;
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
 }

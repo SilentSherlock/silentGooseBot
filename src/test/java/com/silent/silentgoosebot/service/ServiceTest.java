@@ -61,7 +61,7 @@ public class ServiceTest {
         messageStatisticsSchedule.setPhone("+44 7917 941607");
         messageStatisticsSchedule.setChatId(-1001692633324L);
         messageStatisticsSchedule.setScheduleType("0");
-        messageStatisticsSchedule.setMessageProcessorId("");
+        messageStatisticsSchedule.setMessageProcessorId("msgPro6033112347");
         messageStatisticsSchedule.setCreateTime(LocalDateTime.now());
         messageStatisticsSchedule.setUpdateTime(LocalDateTime.now());
         messageStatisticsSchedules.add(messageStatisticsSchedule);

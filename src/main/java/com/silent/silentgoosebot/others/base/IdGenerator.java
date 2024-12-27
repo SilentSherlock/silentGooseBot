@@ -27,4 +27,9 @@ public class IdGenerator {
         String messageStatisticsSchedule = "msgStaSch";
         return messageStatisticsSchedule.concat(getId());
     }
+
+    public static String getNextTeacherMessageSequenceId() {
+        String teacherMessageSequence = "teaMsgSeq";
+        return teacherMessageSequence.concat(getId());
+    }
 }
