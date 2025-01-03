@@ -40,7 +40,7 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
         int totalMessages = 0;
         while (!processShutDown) {
             CompletableFuture<TdApi.Messages> messagesCompletableFuture = moistLifeApp.getClient().send(
-                    new TdApi.GetChatHistory(chat.id, fromMessageId, 0, 50, false)
+                    new TdApi.GetChatHistory(chat.id, fromMessageId, 0, 100, false)
             );
 
             TdApi.Messages messages = messagesCompletableFuture.join();
@@ -70,10 +70,16 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
                 // todo 处理消息内容
             });
 
-
+            fromMessageId = unprocessedMessages.get(unprocessedMessages.size() - 1).id;
             totalMessages += messages.messages.length;
-            if (messages.messages.length < 50 || totalMessages >= AppConst.Tg.message_max_size) {
+            if (messages.messages.length < 1 || totalMessages >= AppConst.Tg.message_max_size) {
                 processShutDown = true;
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 
