@@ -70,9 +70,12 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
                 // todo 处理消息内容
             });
 
-            fromMessageId = unprocessedMessages.get(unprocessedMessages.size() - 1).id;
+            if (messages.messages.length > 0) {
+                fromMessageId = messages.messages[messages.messages.length - 1].id;
+            }
             totalMessages += messages.messages.length;
             if (messages.messages.length < 1 || totalMessages >= AppConst.Tg.message_max_size) {
+                log.info("stop loop, stop condition is messages length {} or totalMessages {}", messages.messages.length, totalMessages);
                 processShutDown = true;
             }
 

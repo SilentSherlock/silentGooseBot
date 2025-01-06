@@ -1,14 +1,15 @@
 package com.silent.silentgoosebot.others.base;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 public class IdGenerator {
 
     private static String getId() {
-        Random rand = new Random(System.currentTimeMillis());
+        SecureRandom rand = new SecureRandom();
         StringBuffer buffer  = new StringBuffer();
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         for (int i = 0; i < 10; i++) {
-            buffer.append(rand.nextInt(10));
+            buffer.append(chars.charAt(rand.nextInt(chars.length())));
         }
         return buffer.toString();
     }
