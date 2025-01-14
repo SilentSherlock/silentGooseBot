@@ -111,38 +111,43 @@ public class JapaneseRomajiTrainer {
 
         while (true) {
             String romaji = keys.get(random.nextInt(keys.size()));
-            System.out.print("What is the Japanese character for: " + romaji + "? ");
-            String answer = scanner.nextLine().trim();
 
-            if ("exit".equalsIgnoreCase(answer)) {
-                System.out.println("Exiting. You made mistakes on the following characters:");
-                for (String error : errors) {
-                    System.out.println(error + " -> " + trainingMap.get(error));
+            while (true) {
+                System.out.println("What is the Japanese character for: " + romaji + "? ");
+                String answer = scanner.nextLine().trim();
+                if ("exit".equalsIgnoreCase(answer)) {
+                    System.out.println("Exiting. You made mistakes on the following characters:");
+                    for (String error : errors) {
+                        System.out.println(error + " -> " + trainingMap.get(error));
+                    }
+                    return;
                 }
-                break;
+
+                // Mixed mode expects both Hiragana and Katakana answers
+                if (mode == 3) {
+                    String[] expected = {hiragana.get(romaji), katakana.get(romaji)};
+                    if (expected[0].equals(answer.split(" ")[0]) && expected[1].equals(answer.split(" ")[1])) {
+                        System.out.println("Correct!");
+                        break;
+                    } else {
+                        System.out.println("Incorrect. Try again!");
+                        errors.add(romaji);
+                    }
+                } else {
+                    // Single mode (Hiragana or Katakana)
+                    if (trainingMap.get(romaji).equals(answer)) {
+                        System.out.println("Correct!");
+                        break;
+                    } else {
+                        System.out.println("Incorrect. Try again!");
+                        System.out.println("提示: " + trainingMap.get(romaji));
+                        errors.add(romaji);
+                    }
+                }
             }
 
-            // Mixed mode expects both Hiragana and Katakana answers
-            if (mode == 3) {
-                String[] expected = {hiragana.get(romaji), katakana.get(romaji)};
-                if (expected[0].equals(answer.split(" ")[0]) && expected[1].equals(answer.split(" ")[1])) {
-                    System.out.println("Correct!");
-                } else {
-                    System.out.println("Incorrect. Try again!");
-                    errors.add(romaji);
-                }
-            } else {
-                // Single mode (Hiragana or Katakana)
-                if (trainingMap.get(romaji).equals(answer)) {
-                    System.out.println("Correct!");
-                } else {
-                    System.out.println("Incorrect. Try again!");
-                    errors.add(romaji);
-                }
-            }
         }
 
-        scanner.close();
     }
 }
 
