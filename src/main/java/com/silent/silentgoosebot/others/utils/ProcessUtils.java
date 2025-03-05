@@ -23,13 +23,13 @@ public class ProcessUtils {
     };
 
     /**
-     * 预处理，合并换行符，替换全角冒号
+     * 预处理，合并换行符，替换全角冒号，替换所有空白字符为半角空格
      * @param message
      * @return
      */
     public static String teacherMessagePreProcess(String message) {
         String processed = message.replaceAll("(\\n\\s*)+", "\n");
-        return processed.replaceAll("：", ":");
+        return processed.replaceAll("：", ":").replaceAll("^\\s+|\\s+$", "");
     }
 
     /**
