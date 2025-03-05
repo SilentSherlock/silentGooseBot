@@ -118,6 +118,8 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
                     }
 
                     TeacherDao teacherDao = ContextUtils.getBean(TeacherDao.class);
+                    teacher.setUpdateTime(LocalDateTime.now());
+                    teacher.setInsertTime(LocalDateTime.now());
                     teacherDao.insert(teacher);
 
                 } else if (content instanceof TdApi.MessageText messageText) {
