@@ -33,4 +33,9 @@ public class IdGenerator {
         String teacherMessageSequence = "teaMsgSeq";
         return teacherMessageSequence.concat(getId());
     }
+
+    public static String getNextTeacherId() {
+        String teacher = "tea";
+        return teacher.concat(getId());
+    }
 }

@@ -3,13 +3,16 @@ package com.silent.silentgoosebot.others.processor.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.silent.silentgoosebot.dao.TeacherDao;
 import com.silent.silentgoosebot.dao.TeacherMessageSequenceDao;
+import com.silent.silentgoosebot.entity.Teacher;
 import com.silent.silentgoosebot.entity.TeacherMessageSequence;
 import com.silent.silentgoosebot.others.MoistLifeApp;
 import com.silent.silentgoosebot.others.base.AppConst;
 import com.silent.silentgoosebot.others.base.IdGenerator;
 import com.silent.silentgoosebot.others.processor.ChatsMessageProcessor;
 import com.silent.silentgoosebot.others.utils.ContextUtils;
+import com.silent.silentgoosebot.others.utils.ProcessUtils;
 import it.tdlight.jni.TdApi;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -67,7 +71,54 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
             //处理消息内容
             unprocessedMessages.forEach(message -> {
                 log.info("message {}", message);
-                // todo 处理消息内容
+                TdApi.MessageContent content = message.content;
+                if (content instanceof TdApi.MessagePhoto messagePhoto) {
+                    log.info("photo {}", messagePhoto.caption.text);
+                    String text = messagePhoto.caption.text;
+                    text = ProcessUtils.teacherMessagePreProcess(text);
+                    log.info("photo text {}", text);
+                    //跳出lambda
+                    if (text.isBlank()) return;
+                    Map<String, String> keyValueMap = ProcessUtils.extractKeyValue(text);
+                    if (keyValueMap.isEmpty()) return;
+                    Teacher teacher = new Teacher();
+                    teacher.setTeacherId(IdGenerator.getNextTeacherId());
+                    for (String[] teacherKey : ProcessUtils.teacherKeys) {
+                        for (String k : teacherKey) {
+                            if (keyValueMap.containsKey(k)) {
+                                String v = keyValueMap.get(k);
+                                // todo 完善字段映射
+                                switch (k) {
+                                    case "姓名":
+                                        teacher.setTeacherName(v);
+                                        break;
+                                    case "地点":
+                                        teacher.setLocation(v);
+                                        break;
+                                    case "价格":
+                                        teacher.setPriceP(new java.math.BigDecimal(v));
+                                        break;
+                                    case "价格(PP)":
+                                        teacher.setPricePp(new java.math.BigDecimal(v));
+                                        break;
+                                    case "价格(晚上)":
+                                        teacher.setPriceNight(new java.math.BigDecimal(v));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    TeacherDao teacherDao = ContextUtils.getBean(TeacherDao.class);
+                    teacherDao.insert(teacher);
+
+                } else if (content instanceof TdApi.MessageText messageText) {
+                    log.info("text {}", messageText.text.text);
+                } else {
+                    log.info("unknown message type {}", content.getClass());
+                }
+
             });
 
             if (messages.messages.length > 0) {
