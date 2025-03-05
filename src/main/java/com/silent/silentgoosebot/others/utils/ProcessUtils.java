@@ -29,7 +29,7 @@ public class ProcessUtils {
      */
     public static String teacherMessagePreProcess(String message) {
         String processed = message.replaceAll("(\\n\\s*)+", "\n");
-        return processed.replaceAll("：", ":").replaceAll("^\\s+|\\s+$", "");
+        return processed.replaceAll("：", ":").replaceAll("\\p{Z}\\s&&[^\\n\\r]+", " ");
     }
 
     /**
