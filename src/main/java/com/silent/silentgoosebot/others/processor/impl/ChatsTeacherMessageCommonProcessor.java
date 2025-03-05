@@ -17,6 +17,7 @@ import it.tdlight.jni.TdApi;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,34 +83,40 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
                     Map<String, String> keyValueMap = ProcessUtils.extractKeyValue(text);
                     if (keyValueMap.isEmpty()) return;
                     Teacher teacher = new Teacher();
-                    teacher.setTeacherId(IdGenerator.getNextTeacherId());
-                    for (String[] teacherKey : ProcessUtils.teacherKeys) {
+                    teacher.setTeacherTableId(IdGenerator.getNextTeacherId());
+                    for (int i = 0; i < ProcessUtils.teacherKeys.length; i++) {
+                        String[] teacherKey = ProcessUtils.teacherKeys[i];
                         for (String k : teacherKey) {
                             if (keyValueMap.containsKey(k)) {
                                 String v = keyValueMap.get(k);
                                 // todo 完善字段映射
-                                switch (k) {
-                                    case "姓名":
+                                switch (i) {
+                                    case 0:
                                         teacher.setTeacherName(v);
                                         break;
-                                    case "地点":
+                                    case 1:
                                         teacher.setLocation(v);
                                         break;
-                                    case "价格":
-                                        teacher.setPriceP(new java.math.BigDecimal(v));
+                                    case 2:
+                                        BigDecimal[] pricePGroup = ProcessUtils.extractPriceNumber(v);
+                                        teacher.setPriceP(pricePGroup[0]);
                                         break;
-                                    case "价格(PP)":
-                                        teacher.setPricePp(new java.math.BigDecimal(v));
+                                    case 3:
+                                        BigDecimal[] pricePpGroup = ProcessUtils.extractPriceNumber(v);
+                                        teacher.setPricePp(pricePpGroup[0]);
                                         break;
-                                    case "价格(晚上)":
-                                        teacher.setPriceNight(new java.math.BigDecimal(v));
+                                    case 4:
+//                                        teacher.setPriceNight(new java.math.BigDecimal(v));
                                         break;
+                                    case 5:
+                                        teacher.setTeacherId(v.trim());
                                     default:
                                         break;
                                 }
                             }
                         }
                     }
+
                     TeacherDao teacherDao = ContextUtils.getBean(TeacherDao.class);
                     teacherDao.insert(teacher);
 

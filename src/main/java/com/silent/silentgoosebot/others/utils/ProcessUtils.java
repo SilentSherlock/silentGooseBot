@@ -2,8 +2,11 @@ package com.silent.silentgoosebot.others.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * some message process utils for message process
@@ -11,11 +14,12 @@ import java.util.Map;
 public class ProcessUtils {
     public static String[][] teacherKeys = {
             //todo 完善关键字
-            new String[]{"姓名"},
-            new String[]{"地点"},
-            new String[]{"价格"},
-            new String[]{"价格(PP)"},
-            new String[]{"价格(晚上)"},
+            new String[]{"姓名", "名字"},
+            new String[]{"地点", "地区"},
+            new String[]{"一次价格"},
+            new String[]{"两次价格", "二次价格"},
+            new String[]{"包夜价格"},
+            new String[]{"电报号"},
     };
 
     /**
@@ -25,7 +29,7 @@ public class ProcessUtils {
      */
     public static String teacherMessagePreProcess(String message) {
         String processed = message.replaceAll("(\\n\\s*)+", "\n");
-        return message.replaceAll("：", ":");
+        return processed.replaceAll("：", ":");
     }
 
     /**
@@ -61,6 +65,23 @@ public class ProcessUtils {
                 }
             }
             result.put(key, value);
+        }
+        return result;
+    }
+
+    /**
+     * 给定一个字符串，字符串中存在两个数字，两个数字不相连，编写函数提取这两个数字，并以BigDecimal[]返回
+     */
+    public static BigDecimal[] extractPriceNumber(String message) {
+        BigDecimal[] result = new BigDecimal[2];
+        // 正则表达式：匹配连续数字
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(message);
+
+        int count = 0;
+        while (matcher.find() && count < 2) {
+            result[count] = new BigDecimal(matcher.group());
+            count++;
         }
         return result;
     }
