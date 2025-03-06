@@ -86,4 +86,17 @@ public class ProcessUtils {
         return result;
     }
 
+    /**
+     * 提取包含用户名字符串中的用户名，不包含@符号
+     */
+    public static String extractUserId(String message) {
+        // 正则表达式：匹配@符号后的所有非空白字符
+        Pattern pattern = Pattern.compile("(?<=^|\\\\s)@?([a-zA-Z0-9_]{5,32})(?=$|\\\\s)");
+        Matcher matcher = pattern.matcher(message);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
 }

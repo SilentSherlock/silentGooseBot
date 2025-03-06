@@ -109,7 +109,7 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
 //                                        teacher.setPriceNight(new java.math.BigDecimal(v));
                                         break;
                                     case 5:
-                                        teacher.setTeacherId(v.trim());
+                                        teacher.setTeacherId(ProcessUtils.extractUserId(v));
                                     default:
                                         break;
                                 }
