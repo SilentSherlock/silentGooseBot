@@ -3,4 +3,9 @@
 <mapper namespace="com.silent.silentgoosebot.dao.TeacherDao">
     <resultMap id="teacherMap" type="com.silent.silentgoosebot.entity.Teacher" autoMapping="true"/>
 
-</mapper> 
+    <select id="getEmptyLoginStatusTeacherId" resultMap="teacherMap">
+        SELECT teacher_id
+        FROM teacher
+        WHERE last_login_status = '' OR last_login_status IS NULL
+    </select>
+</mapper>

@@ -43,6 +43,12 @@ public class AppConst {
         interface User {
             String link = "@";
             String link_prefix = "tg://user?id=";
+            String status_online = "在线";
+            String status_recently = "最近曾在线";
+            String status_LastWeek = "上周曾在线";
+            String status_lastMonth = "上月曾在线";
+            String status_offline = "离线";
+            String status_Empty = "在线状态空";
         }
 
         interface Command {

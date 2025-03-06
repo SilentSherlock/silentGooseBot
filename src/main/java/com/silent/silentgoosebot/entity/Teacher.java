@@ -25,6 +25,7 @@ public class Teacher {
     private BigDecimal priceP;
     private BigDecimal pricePp;
     private BigDecimal priceNight;
+    private String lastLoginStatus;
     private LocalDateTime insertTime;
     private LocalDateTime updateTime;
 }

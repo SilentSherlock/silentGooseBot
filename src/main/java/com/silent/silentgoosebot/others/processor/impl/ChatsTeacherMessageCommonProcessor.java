@@ -84,6 +84,7 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
                     if (keyValueMap.isEmpty()) return;
                     Teacher teacher = new Teacher();
                     teacher.setTeacherTableId(IdGenerator.getNextTeacherId());
+                    teacher.setLastLoginStatus("");
                     for (int i = 0; i < ProcessUtils.teacherKeys.length; i++) {
                         String[] teacherKey = ProcessUtils.teacherKeys[i];
                         for (String k : teacherKey) {

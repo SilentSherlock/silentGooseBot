@@ -87,7 +87,7 @@ public class ProcessUtils {
     }
 
     /**
-     * 提取包含用户名字符串中的用户名，不包含@符号
+     * 提取包含用户名字符串中的telegram用户名，不包含@符号
      */
     public static String extractUserId(String message) {
         // 正则表达式：匹配@符号后的所有非空白字符
