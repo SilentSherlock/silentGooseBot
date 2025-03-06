@@ -110,6 +110,7 @@ public class ChatsTeacherMessageCommonProcessor implements ChatsMessageProcessor
                                         break;
                                     case 5:
                                         teacher.setTeacherId(ProcessUtils.extractUserId(v));
+                                        break;
                                     default:
                                         break;
                                 }
