@@ -72,4 +72,10 @@ public class ChatController {
         }
         return Result.createBySuccess();
     }
+
+    @RequestMapping(value = "/teacherLoginStatusSchedule", method = RequestMethod.GET)
+    public Result teacherLoginStatusSchedule() {
+        chatSchedule.teacherLoginStatusSchedule();
+        return Result.createBySuccess();
+    }
 }
