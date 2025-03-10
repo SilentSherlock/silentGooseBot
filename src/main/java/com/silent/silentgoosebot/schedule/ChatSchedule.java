@@ -41,7 +41,7 @@ public class ChatSchedule {
     /**
      * 启动scheduleType=0的定时任务
      */
-    @Scheduled(cron = "")
+//    @Scheduled(cron = "")
     public void JobScheduleType0() {
         String scheduleType = "0";
         List<MessageStatisticsSchedule> messageStatisticsScheduleList = messageStatisticsScheduleService.getMessageStatisticsScheduleByType(scheduleType);
@@ -71,7 +71,7 @@ public class ChatSchedule {
     /**
      * 补充teacher表上线状态定时任务
      */
-    @Scheduled(cron = "")
+    @Scheduled(cron = "0 0 */2 * * ?")
     public void teacherLoginStatusSchedule() {
         log.info("teacherLoginStatusSchedule start");
 

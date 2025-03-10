@@ -36,8 +36,8 @@ public class TeacherService {
     }
 
     public void updateTeacherListById(List<Teacher> teachers) {
-        LambdaUpdateWrapper<Teacher> wrapper = new LambdaUpdateWrapper<>();
         teachers.forEach(teacher -> {
+            LambdaUpdateWrapper<Teacher> wrapper = new LambdaUpdateWrapper<>();
             wrapper.set(Teacher::getLastLoginStatus, teacher.getLastLoginStatus())
                     .eq(Teacher::getTeacherTableId, teacher.getTeacherTableId());
             teacherDao.update(null, wrapper);
