@@ -27,8 +27,7 @@ public class TeacherService {
 
     public List<Teacher> getEmptyLoginStatusTeacherId() {
         LambdaQueryWrapper<Teacher> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Teacher::getTeacherId)
-                .select(Teacher::getTeacherTableId)
+        wrapper.select(Teacher::getTeacherTableId, Teacher::getTeacherId)
                 .eq(Teacher::getLastLoginStatus, "")
                 .or()
                 .eq(Teacher::getLastLoginStatus, null);
