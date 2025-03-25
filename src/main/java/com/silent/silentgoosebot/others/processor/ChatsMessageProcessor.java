@@ -27,4 +27,13 @@ public interface ChatsMessageProcessor {
     default boolean isMessageUnRead(TdApi.Message message) {
         return !message.isOutgoing && message.containsUnreadMention;
     }
+
+    /**
+     * 抽取的公共预处理方法，将频道里的消息先落流水表，去掉已经落表的消息，最大消息数量设置默认值，同时各个实现类也可以自己指定
+     * @param chat
+     * @param moistLifeApp
+     */
+    default void preProcess(TdApi.Chat chat, MoistLifeApp moistLifeApp) {
+
+    }
 }
