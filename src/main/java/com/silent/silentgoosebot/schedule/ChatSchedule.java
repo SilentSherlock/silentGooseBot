@@ -41,13 +41,17 @@ public class ChatSchedule {
     /**
      * 启动scheduleType=0的定时任务
      */
-//    @Scheduled(cron = "")
+    @Scheduled(cron = "0 0 20 * * ?")
     public void JobScheduleType0() {
         String scheduleType = "0";
         List<MessageStatisticsSchedule> messageStatisticsScheduleList = messageStatisticsScheduleService.getMessageStatisticsScheduleByType(scheduleType);
         messageStatisticsScheduleList.forEach(messageStatisticsSchedule -> {
             log.info("schedule type {} start", scheduleType);
             MoistLifeApp moistLifeApp = appAccountMap.getAccountMap().get(messageStatisticsSchedule.getPhone());
+            if (moistLifeApp == null) {
+                log.info("current account is null {}", messageStatisticsSchedule.getPhone());
+                return;
+            }
             MessageProcessor messageProcessor = messageProcessorService.selectById(messageStatisticsSchedule.getMessageProcessorId());
             ForkJoinPool.commonPool().submit(() -> {
                 log.info("异步启动线程处理chatId {}, phone {}", messageStatisticsSchedule.getChatId(), messageStatisticsSchedule.getPhone());
