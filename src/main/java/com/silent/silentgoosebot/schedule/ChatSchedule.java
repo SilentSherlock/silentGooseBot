@@ -42,6 +42,7 @@ public class ChatSchedule {
      * 启动scheduleType=0的定时任务
      */
     @Scheduled(cron = "0 0 20 * * ?")
+//    @Scheduled(cron = "0 */5 * * * ?")
     public void JobScheduleType0() {
         String scheduleType = "0";
         List<MessageStatisticsSchedule> messageStatisticsScheduleList = messageStatisticsScheduleService.getMessageStatisticsScheduleByType(scheduleType);

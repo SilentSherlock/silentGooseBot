@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOGS" value="/home/botuser/logs"/>
+    <property name="LOGS" value="/home/botuser/silentGooseBot/logs"/>
     <!-- 控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -13,7 +13,7 @@
         <file>${LOGS}/bot-app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOGS}/bot-app-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>10</maxHistory>
+            <maxHistory>2</maxHistory>
             <maxFileSize>500MB</maxFileSize>
         </rollingPolicy>
         <encoder>
@@ -29,7 +29,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOGS}/bot-app-error-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>10</maxHistory>
+            <maxHistory>2</maxHistory>
             <maxFileSize>500MB</maxFileSize>
         </rollingPolicy>
         <encoder>
