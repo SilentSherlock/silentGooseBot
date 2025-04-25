@@ -44,6 +44,8 @@ dependencies {
     // do not specify the versions on the dependencies below!
     implementation group: 'it.tdlight', name: 'tdlight-java' // Java 8 is supported if you use the following dependency classifier: `jdk8`
     implementation group: 'it.tdlight', name: 'tdlight-natives', classifier: 'windows_amd64'
+    implementation group: 'it.tdlight', name: 'tdlight-natives', classifier: 'linux_amd64_gnu_ssl1'
+    implementation group: 'it.tdlight', name: 'tdlight-natives', classifier: 'linux_amd64_gnu_ssl3'
     // Include other native classifiers, for example linux_amd64_gnu_ssl3,  linux_amd64_clang_ssl3, macos_amd64, linux_armhf_gnu_ssl3, ... -->
 
     //add spring jpa
