@@ -119,6 +119,7 @@ public class BotController {
                         } else if (authorizationState instanceof TdApi.AuthorizationStateLoggingOut) {
                             log.info("user logged out");
                         } else if (authorizationState instanceof TdApi.AuthorizationStateWaitCode) {
+                            log.info("user need WaitCode");
                             Result result = Result.createBySuccess("need wait code");
                             Map<String, Object> resultMap = new HashMap<>();;
                             resultMap.put("state", "1");
@@ -127,6 +128,7 @@ public class BotController {
 
                         } else if (authorizationState instanceof TdApi.AuthorizationStateWaitPassword) {
                             // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
+                            log.info("user need password");
                             Result result = Result.createBySuccess("need wait password");
                             Map<String, Object> resultMap = new HashMap<>();;
                             resultMap.put("state", "2");
@@ -202,6 +204,11 @@ public class BotController {
             });
         }
 
+        if (null == deferredResult.getResult()) {
+            log.info("deferredResult is null");
+        } else {
+            log.info("deferredResult return:" + ((Result)deferredResult.getResult()).getStatus());
+        }
         return deferredResult;
 
     }

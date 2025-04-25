@@ -20,7 +20,7 @@ public class WebCorsConfig implements WebMvcConfigurer {
         log.info("origin: {}", origin);
         registry.addMapping("/**")
                 .allowedOrigins(origin)
-                .allowCredentials(true)
+                .allowCredentials(false)
                 .allowedHeaders("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
     }
